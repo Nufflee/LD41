@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
   private float engageDistance = 5.0f;
   private bool engaged;
 
-  private int health = 100;
+  private float health = 100;
 
   // Use this for initialization
   private void Start()
@@ -50,11 +50,6 @@ public class Enemy : MonoBehaviour
 
     float distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
-    if (target == AIGlobals.Instance.Target)
-    {
-      print(distance);
-    }
-
     if (distance < 2.0f)
     {
       target.GetComponent<Player>().Damage(0.06f);
@@ -87,7 +82,7 @@ public class Enemy : MonoBehaviour
     }
   }
 
-  public void Damage(int damage)
+  public void Damage(float damage)
   {
     health -= damage;
 

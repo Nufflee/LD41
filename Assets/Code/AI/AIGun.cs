@@ -36,7 +36,7 @@ public class AIGun : MonoBehaviour
 
         if (hit.collider.CompareTag("Enemy"))
         {
-          hit.collider.gameObject.GetComponent<Enemy>().Damage(33);
+          hit.collider.gameObject.GetComponent<Enemy>().Damage(33.0f / (Vector3.Distance(transform.position, hit.point) / 4));
         }
       }
     }
