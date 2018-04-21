@@ -11,8 +11,8 @@ public class WaveManager : MonoBehaviour
   private GameObject enemy;
   private int waveNumber = 1;
   private bool waveInProgress;
-  [HideInInspector] public List<GameObject> enemies = new List<GameObject>();
-
+  [HideInInspector] public List<GameObject> playerEnemies = new List<GameObject>();
+  [HideInInspector] public List<GameObject> aiEnemies = new List<GameObject>();
   private void Start()
   {
     waveText = transform.Find("WaveText").GetComponent<Text>();
@@ -22,7 +22,7 @@ public class WaveManager : MonoBehaviour
 
   private void Update()
   {
-    if (enemies.Count == 0 && waveNumber > 1)
+    if (playerEnemies.Count + aiEnemies.Count == 0 && waveNumber > 1)
     {
       waveInProgress = false;
     }
@@ -64,9 +64,18 @@ public class WaveManager : MonoBehaviour
 
   private void SpawnEnemy()
   {
-    GameObject gameObject = Instantiate(enemy, new Vector3(5, 25, 5), Quaternion.identity);
-    gameObject.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
+    // Player Room
+    GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
+    playerRoomEnemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
 
-    enemies.Add(gameObject);
+    playerEnemies.Add(playerRoomEnemy);
+
+
+    // AI Room
+    GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
+    aiRoomEnemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
+
+    aiEnemies.Add(aiRoomEnemy);
+
   }
 }
