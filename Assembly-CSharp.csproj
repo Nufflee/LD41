@@ -53,8 +53,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Code\Enemy.cs" />
+    <Compile Include="Assets\Code\Globals.cs" />
     <Compile Include="Assets\Code\Gun.cs" />
-    <Compile Include="Assets\Enemy.cs" />
+    <Compile Include="Assets\Code\PlayerGlobals.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshLink.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />

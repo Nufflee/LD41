@@ -27,10 +27,9 @@ public class Gun : MonoBehaviour
 
       if (Physics.Raycast(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
-        print(hit.normal);
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
 
-        //Destroy(sparkGameObject, 1.5f);
+        Destroy(sparkGameObject, 1.5f);
 
         if (hit.collider.CompareTag("Enemy"))
         {
