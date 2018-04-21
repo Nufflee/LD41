@@ -13,6 +13,7 @@ public class WaveManager : MonoBehaviour
   private bool waveInProgress;
   [HideInInspector] public List<GameObject> playerEnemies = new List<GameObject>();
   [HideInInspector] public List<GameObject> aiEnemies = new List<GameObject>();
+
   private void Start()
   {
     waveText = transform.Find("WaveText").GetComponent<Text>();
@@ -70,12 +71,10 @@ public class WaveManager : MonoBehaviour
 
     playerEnemies.Add(playerRoomEnemy);
 
-
     // AI Room
     GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
-    aiRoomEnemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
+    aiRoomEnemy.GetComponent<Enemy>().globals = AIGlobals.Instance;
 
     aiEnemies.Add(aiRoomEnemy);
-
   }
 }
