@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
   private float health = 100;
@@ -18,7 +18,8 @@ public class Player : MonoBehaviour
   {
     health -= damage;
 
-    print("health: " + health);
+    // Update fill amount.
+    transform.GetChild(0).GetChild(0).Find("GunDisplay").GetChild(0).Find("PlayerHealthBar").GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
 
     if (health <= 0)
     {

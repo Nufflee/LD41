@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerGlobals : Globals
 {
@@ -13,7 +15,7 @@ public class PlayerGlobals : Globals
     base.Awake();
 
     Instance = this;
-    
+
     Ground = GameObject.FindWithTag("PlayerGround");
     Target = GameObject.FindWithTag("Player");
   }

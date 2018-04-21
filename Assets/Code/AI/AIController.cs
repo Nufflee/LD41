@@ -7,15 +7,20 @@ public class AIController : MonoBehaviour
 
   private Transform target;
 
-  private WaveManager waveManager;
+  private Globals globalsInstance;
+
+  public void SetGlobals(Globals globals) {
+    this.globalsInstance = globals;
+  }
 
   private void Start()
   {
-    waveManager = FindObjectOfType<WaveManager>();
     agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
     agent.updateRotation = false;
     agent.updatePosition = true;
+
+    globalsInstance = AIGlobals.Instance;
   }
 
   private void FixedUpdate()
@@ -53,7 +58,7 @@ public class AIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    foreach (GameObject t in waveManager.aiEnemies)
+    foreach (GameObject t in globalsInstance.enemies)
     {
       float dist = Vector3.Distance(t.transform.position, currentPos);
       if (dist < minDist)

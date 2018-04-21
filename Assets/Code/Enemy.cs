@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour
 
   private void OnDestroy()
   {
-    globals.WaveManager.aiEnemies.Remove(gameObject);
-    globals.WaveManager.playerEnemies.Remove(gameObject);
+    PlayerGlobals.Instance.enemies.Remove(gameObject);
+    AIGlobals.Instance.enemies.Remove(gameObject);
   }
 }
