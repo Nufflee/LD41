@@ -33,8 +33,7 @@ public class Gun : MonoBehaviour
 
         if (hit.collider.CompareTag("Enemy"))
         {
-          // Damage the enemy
-          print("it was hit!");
+          hit.collider.gameObject.GetComponent<Enemy>().Damage(33);
         }
       }
     }

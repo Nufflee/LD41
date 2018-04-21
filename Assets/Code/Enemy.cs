@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
 
   private float engageDistance = 5.0f;
 
+  private int health = 100;
+
   // Use this for initialization
   private void Start()
   {
@@ -28,6 +30,13 @@ public class Enemy : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
+    if (transform.position.y < 2.0f)
+    {
+      agent.enabled = true;
+    }
+
+    if (agent.isOnNavMesh == false) return;
+
     agent.baseOffset = 0.75f + Mathf.Sin(Time.time * 4.0f) / 26.0f;
 
     float distance = Vector3.Distance(agent.transform.position, target.transform.position);
@@ -67,5 +76,20 @@ public class Enemy : MonoBehaviour
       transform.LookAt(target.transform);
       transform.eulerAngles = new Vector3(0f, 0f, transform.eulerAngles.z);
     }
+  }
+
+  public void Damage(int damage)
+  {
+    health -= damage;
+
+    if (health <= 0)
+    {
+      Destroy(gameObject);
+    }
+  }
+
+  private void OnDestroy()
+  {
+    globals.WaveManager.enemies.Remove(gameObject);
   }
 }
