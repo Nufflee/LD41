@@ -15,10 +15,8 @@ public class Gun : MonoBehaviour
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
   }
 
-  private void Update()
-  {
-    if (Input.GetMouseButton(0) && Time.time > nextFire)
-    {
+  public void Shoot() {
+    if(Time.time > nextFire) {
       nextFire = Time.time + fireRate;
 
       muzzleFlash.Play();
@@ -27,15 +25,23 @@ public class Gun : MonoBehaviour
 
       if (Physics.Raycast(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
-        GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+          GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
 
-        Destroy(sparkGameObject, 1.5f);
+          Destroy(sparkGameObject, 1.5f);
 
-        if (hit.collider.CompareTag("Enemy"))
-        {
-          hit.collider.gameObject.GetComponent<Enemy>().Damage(33);
-        }
+          if (hit.collider.CompareTag("Enemy"))
+          {
+              hit.collider.gameObject.GetComponent<Enemy>().Damage(33);
+          }
       }
+    }
+  }
+
+  private void Update()
+  {
+    if (Input.GetMouseButton(0))
+    {
+      Shoot();
     }
   }
 }
