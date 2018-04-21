@@ -35,10 +35,10 @@ public class Enemy : MonoBehaviour
   private void Update()
   {
     if (target == null) return;
-    
+
     healthBar.LookAt(target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
-    
+
     if (transform.position.y < 2.0f)
     {
       agent.enabled = true;
@@ -50,7 +50,12 @@ public class Enemy : MonoBehaviour
 
     float distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
-    if (distance < 2.0f && agent.isStopped)
+    if (target == AIGlobals.Instance.Target)
+    {
+      print(distance);
+    }
+
+    if (distance < 2.0f)
     {
       target.GetComponent<Player>().Damage(0.06f);
 

@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 
-public class PlayerGlobals : Globals
+public class AIGlobals : Globals
 {
   public override GameObject Ground { get; protected set; }
   public override GameObject Target { get; protected set; }
-  public bool IsDead { get; set; }
 
   public static Globals Instance { get; protected set; }
-  
+
   protected override void Awake()
   {
     base.Awake();
 
     Instance = this;
-    
-    Ground = GameObject.FindWithTag("PlayerGround");
-    Target = GameObject.FindWithTag("Player");
+
+    Ground = GameObject.FindWithTag("AIGround");
+    Target = GameObject.FindWithTag("AIPlayer");
   }
 }

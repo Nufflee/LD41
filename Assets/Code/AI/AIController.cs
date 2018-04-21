@@ -18,7 +18,6 @@ public class AIController : MonoBehaviour
     agent.updatePosition = true;
   }
 
-
   private void FixedUpdate()
   {
     if (target == null && agent.isStopped) agent.isStopped = false;
@@ -41,8 +40,6 @@ public class AIController : MonoBehaviour
 
       // Start shooting.
       transform.GetChild(0).GetChild(0).GetComponent<AIGun>().Shoot();
-
-      return;
     }
     else
     {
