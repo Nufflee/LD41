@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
   private Transform healthBar;
 
   private float engageDistance = 5.0f;
+  private bool engaged;
 
   private int health = 100;
 
@@ -33,10 +34,11 @@ public class Enemy : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
-
+    if (target == null) return;
+    
     healthBar.LookAt(target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
-
+    
     if (transform.position.y < 2.0f)
     {
       agent.enabled = true;
@@ -48,16 +50,11 @@ public class Enemy : MonoBehaviour
 
     float distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
-    if (distance < 2.0f)
+    if (distance < 2.0f && agent.isStopped)
     {
-      agent.isStopped = true;
+      target.GetComponent<Player>().Damage(0.06f);
 
       return;
-    }
-
-    if (agent.isStopped)
-    {
-      agent.isStopped = false;
     }
 
     if (distance > engageDistance && agent.velocity.magnitude <= 0.001f)
@@ -74,7 +71,7 @@ public class Enemy : MonoBehaviour
 
       agent.SetDestination(wanderPosition);
     }
-    else if (distance <= engageDistance)
+    else if (distance <= engageDistance || engaged)
     {
       // Set the agent's position to the player's position.
       agent.SetDestination(target.transform.position);
@@ -89,12 +86,14 @@ public class Enemy : MonoBehaviour
   {
     health -= damage;
 
+    engaged = true;
+
     if (health <= 0)
     {
       Destroy(gameObject);
     }
 
-    healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
+    healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / 100f;
   }
 
   private void OnDestroy()
