@@ -1,6 +1,6 @@
-using UnityEditor;
 using UnityEngine.AI;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
 
   private NavMeshAgent agent;
   private GameObject target;
+
+  private Transform healthBar;
 
   private float engageDistance = 5.0f;
 
@@ -24,12 +26,17 @@ public class Enemy : MonoBehaviour
     }
 
     target = globals.Target;
+    healthBar = transform.GetChild(0);
     agent = GetComponent<NavMeshAgent>();
   }
 
   // Update is called once per frame
   private void Update()
   {
+
+    healthBar.LookAt(target.transform);
+    healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
+
     if (transform.position.y < 2.0f)
     {
       agent.enabled = true;
@@ -86,6 +93,8 @@ public class Enemy : MonoBehaviour
     {
       Destroy(gameObject);
     }
+
+    healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
   }
 
   private void OnDestroy()
