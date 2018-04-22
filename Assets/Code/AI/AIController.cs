@@ -53,8 +53,12 @@ public class AIController : MonoBehaviour
       // Get current AI's ground renderer.
       Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
+      NavMeshHit hit;
+      
+      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+      
       //  Get a position to wander.
-      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
+      Vector3 wanderPosition = hit.position; // = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
 
       // Go to the wander position.
       agent.SetDestination(wanderPosition);
@@ -65,7 +69,9 @@ public class AIController : MonoBehaviour
     // If we don't have a target and we won't wander, we shouldn't do anything.
     if (target == null)
     {
+/*
       if (AIGlobals.Instance.enemies.Count > 0) print("I have " + AIGlobals.Instance.enemies.Count + " more enemies to go!");
+*/
       return;
     }
 

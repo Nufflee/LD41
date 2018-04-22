@@ -49,7 +49,7 @@ public class MMEnemy : MonoBehaviour
 
     if (distance < 2.0f)
     {
-        globals.Target.GetComponent<MMAIController>().Damage(0.06f);
+      globals.Target.GetComponent<MMAIController>().Damage(0.06f);
       return;
     }
 
@@ -61,15 +61,14 @@ public class MMEnemy : MonoBehaviour
 
       NavMeshHit hit;
 
-      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
 
-      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
+      Vector3 wanderPosition = hit.position;
 
       agent.SetDestination(wanderPosition);
     }
     else if (distance <= engageDistance || engaged)
     {
-
       // Set the agent's position to the player's position.
       agent.SetDestination(globals.Target.transform.position);
 

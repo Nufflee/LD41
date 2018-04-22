@@ -32,11 +32,15 @@ public class Enemy : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
-    if(globals.name == PlayerGlobals.Instance.name) {
+    if (globals.name == PlayerGlobals.Instance.name)
+    {
       GetComponent<Renderer>().material.color = Color.red;
-    } else {
+    }
+    else
+    {
       GetComponent<Renderer>().material.color = Color.blue;
     }
+
     if (globals.Target == null) return;
     healthBar.LookAt(PlayerGlobals.Instance.Target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
@@ -75,9 +79,10 @@ public class Enemy : MonoBehaviour
 
       NavMeshHit hit;
 
-      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
 
-      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
+      Vector3 wanderPosition = hit.position;
+      // = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
 
       agent.SetDestination(wanderPosition);
     }

@@ -23,8 +23,6 @@ public class Player : MonoBehaviour
       health += 0.005f;
     }
 
-    print(gun.isReloading);
-
     if (gun.isReloading && controller.movementSettings.ForwardSpeed != 4.0f)
     {
       controller.movementSettings.ForwardSpeed = 4.0f;

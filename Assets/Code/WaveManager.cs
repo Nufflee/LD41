@@ -39,7 +39,7 @@ public class WaveManager : MonoBehaviour
       waveInProgress = false;
     }
 
-    if (Input.GetKeyDown(KeyCode.F) && waveInProgress == false)
+    if (Input.GetKeyDown(KeyCode.F) && waveInProgress == false && waveText.enabled == false)
     {
       crosshair.SetActive(false);
 
