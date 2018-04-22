@@ -9,6 +9,7 @@ TagManager:
   - AIGround
   - AIPlayer
   - Wall
+  - Glass
   layers:
   - Default
   - TransparentFX

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,11 +11,13 @@ public class AIGun : MonoBehaviour
   private GameObject sparkEffect;
   private Animation animation;
   private AudioSource audioSource;
-  private bool isReloading;
-  private int magazineAmmo = 30;
+  public bool isReloading;
+  private int magazineAmmo = 3;
   private int ammo = 90;
   private Text magazineAmmoText;
   private Text ammoText;
+  private AudioClip gunShotClip;
+  private AudioClip reloadClip;
 
   private GameObject bulletHolePrefab;
   private Camera AICamera;
@@ -32,6 +33,8 @@ public class AIGun : MonoBehaviour
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
     animation = GetComponent<Animation>();
     audioSource = GetComponent<AudioSource>();
+    gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
+    reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
   }
 
   public void Shoot()
@@ -62,6 +65,8 @@ public class AIGun : MonoBehaviour
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
 
+      audioSource.PlayOneShot(gunShotClip, 1.0f);
+
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
@@ -72,9 +77,10 @@ public class AIGun : MonoBehaviour
           // balance
           hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
         }
-        
-        if(hit.collider.CompareTag("Wall")) {
-          GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
+
+        if (hit.collider.CompareTag("Wall"))
+        {
+          Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
         }
       }
     }
@@ -90,8 +96,6 @@ public class AIGun : MonoBehaviour
     {
       transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
     }
-
-
   }
 
   private IEnumerator Reload()
@@ -102,7 +106,11 @@ public class AIGun : MonoBehaviour
 
     animation.Play();
 
-    yield return new WaitForSeconds(animation.clip.length - 0.5f);
+    yield return new WaitForSeconds(0.4f);
+
+    audioSource.PlayOneShot(reloadClip);
+
+    yield return new WaitForSeconds(animation.clip.length - 0.9f);
 
     // What if there's not enough ammo in ammo?
     if (ammo < 30 - magazineAmmo)
@@ -125,7 +133,7 @@ public class AIGun : MonoBehaviour
 
     if (ammo < 90)
     {
-        ammo = 90;
+      ammo = 90;
     }
   }
 }
