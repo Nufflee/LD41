@@ -32,8 +32,13 @@ public class Enemy : MonoBehaviour
   // Update is called once per frame
   private void Update()
   {
+    if(globals.name == PlayerGlobals.Instance.name) {
+      GetComponent<Renderer>().material.color = Color.red;
+    } else {
+      GetComponent<Renderer>().material.color = Color.blue;
+    }
     if (globals.Target == null) return;
-    healthBar.LookAt(globals.Target.transform);
+    healthBar.LookAt(PlayerGlobals.Instance.Target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
 
     if (transform.position.y < 2.0f)

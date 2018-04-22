@@ -53,13 +53,17 @@ public class Gun : MonoBehaviour
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
-        GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
         Destroy(sparkGameObject, 1.5f);
 
         if (hit.collider.CompareTag("Enemy"))
         {
           // balance
           hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
+        }
+
+        if (hit.collider.CompareTag("Wall"))
+        {
+            GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
         }
       }
     }

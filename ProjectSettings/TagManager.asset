@@ -8,6 +8,7 @@ TagManager:
   - PlayerGround
   - AIGround
   - AIPlayer
+  - Wall
   layers:
   - Default
   - TransparentFX

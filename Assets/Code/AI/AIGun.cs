@@ -63,13 +63,16 @@ public class AIGun : MonoBehaviour
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
-        GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
         Destroy(sparkGameObject, 1.5f);
 
         if (hit.collider.CompareTag("Enemy"))
         {
           // balance
           hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
+        }
+        
+        if(hit.collider.CompareTag("Wall")) {
+          GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
         }
       }
     }
@@ -85,6 +88,8 @@ public class AIGun : MonoBehaviour
     {
       transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
     }
+
+
   }
 
   private IEnumerator Reload()
@@ -115,5 +120,10 @@ public class AIGun : MonoBehaviour
     yield return new WaitForSeconds(0.5f);
 
     isReloading = false;
+
+    if (ammo < 90)
+    {
+        ammo = 90;
+    }
   }
 }
