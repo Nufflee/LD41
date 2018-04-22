@@ -11,6 +11,7 @@ public class AIGun : MonoBehaviour
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
   private Animation animation;
+  private AudioSource audioSource;
   private bool isReloading;
   private int magazineAmmo = 30;
   private int ammo = 90;
@@ -28,6 +29,7 @@ public class AIGun : MonoBehaviour
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
     animation = GetComponent<Animation>();
+    audioSource = GetComponent<AudioSource>();
   }
 
   public void Shoot()
