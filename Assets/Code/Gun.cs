@@ -22,7 +22,6 @@ public class Gun : MonoBehaviour
   private AudioClip gunShotClip;
   private AudioClip reloadClip;
   private GameObject shellPrefab;
-
   private Transform shellSpawn;
 
   private void Start()
@@ -67,7 +66,7 @@ public class Gun : MonoBehaviour
 
       GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
       shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
-      Destroy(shell, 20f);
+      Destroy(shell, 30f);
 
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
@@ -91,11 +90,13 @@ public class Gun : MonoBehaviour
 
           if (hit.collider.CompareTag("Glass"))
           {
-            Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            GameObject glassBulletHole = Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(glassBulletHole, Random.Range(80f, 100f));
           }
           else
           {
-            Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(bulletHole, Random.Range(80f, 100f));
           }
         }
       }
@@ -106,10 +107,10 @@ public class Gun : MonoBehaviour
   {
     if (isReloading) return;
 
-    /*if (Input.GetMouseButton(0))
-    {*/
+    if (Input.GetMouseButton(0))
+    {
       Shoot();
-    /*}*/
+    }
 
     if (Input.GetKeyDown(KeyCode.R) && magazineAmmo < 30 && ammo > 0)
     {
