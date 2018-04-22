@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour
   private float nextFire = -1;
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
+  private GameObject bulletHolePrefab;
   private int magazineAmmo = 30;
   private int ammo = 90;
   private Text magazineAmmoText;
@@ -21,6 +22,7 @@ public class Gun : MonoBehaviour
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
+    bulletHolePrefab = Resources.Load<GameObject>("Prefabs/BulletHole");
     Canvas canvas = transform.GetComponentInChildren<Canvas>();
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
@@ -51,7 +53,7 @@ public class Gun : MonoBehaviour
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
-
+        GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
         Destroy(sparkGameObject, 1.5f);
 
         if (hit.collider.CompareTag("Enemy"))
