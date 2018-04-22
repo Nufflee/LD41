@@ -21,6 +21,9 @@ public class Gun : MonoBehaviour
   public bool isReloading;
   private AudioClip gunShotClip;
   private AudioClip reloadClip;
+  private GameObject shellPrefab;
+
+  private Transform shellSpawn;
 
   private void Start()
   {
@@ -35,6 +38,8 @@ public class Gun : MonoBehaviour
     audioSource = GetComponent<AudioSource>();
     gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
     reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
+    shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
+    shellSpawn = transform.Find("ShellSpawn");
   }
 
   public void Shoot()
@@ -59,6 +64,10 @@ public class Gun : MonoBehaviour
       magazineAmmoText.text = (--magazineAmmo).ToString();
 
       audioSource.PlayOneShot(gunShotClip, 1.0f);
+
+      GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
+      shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
+      Destroy(shell, 20f);
 
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
@@ -97,10 +106,10 @@ public class Gun : MonoBehaviour
   {
     if (isReloading) return;
 
-    if (Input.GetMouseButton(0))
-    {
+    /*if (Input.GetMouseButton(0))
+    {*/
       Shoot();
-    }
+    /*}*/
 
     if (Input.GetKeyDown(KeyCode.R) && magazineAmmo < 30 && ammo > 0)
     {
