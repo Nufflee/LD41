@@ -65,6 +65,7 @@ public class AIGun : MonoBehaviour
       }
 
       transform.Rotate(new Vector3(0, 0, 1), 1.0f);
+      transform.localPosition -= new Vector3(0.0f, 0.0f, 0.08f);
 
       nextFire = Time.time + fireRate;
 
@@ -109,6 +110,15 @@ public class AIGun : MonoBehaviour
     else
     {
       transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
+    }
+
+    if (transform.localPosition.z < 0.8f)
+    {
+      transform.localPosition += new Vector3(0.0f, 0.0f, 0.01f);
+    }
+    else
+    {
+      transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0.8f);
     }
   }
 
