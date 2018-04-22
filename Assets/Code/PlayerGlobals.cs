@@ -7,7 +7,7 @@ public class PlayerGlobals : Globals
   public bool IsDead { get; set; }
 
   public static Globals Instance { get; set; }
-  
+
   protected override void Awake()
   {
     base.Awake();

@@ -58,7 +58,7 @@ public class MMAIGun : MonoBehaviour
         if (hit.collider.CompareTag("Enemy"))
         {
           // balance
-          hit.collider.gameObject.GetComponent<MMEnemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 20.0f));
+          hit.collider.transform.parent.GetComponent<MMEnemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 20.0f));
         }
       }
     }

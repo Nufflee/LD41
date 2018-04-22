@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
+using UnityEngine.XR.WSA.Input;
 
 public class MMAIController : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class MMAIController : MonoBehaviour
 
   private Transform target;
   private float health = 100;
+  public bool isBlue;
 
   private void Start()
   {
@@ -52,7 +55,8 @@ public class MMAIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    foreach (GameObject t in MMWaveManager.Instance.enemies)
+
+    foreach (GameObject t in MMWaveManager.Instance.enemies.Where(enemy => (enemy.GetComponent<MMEnemy>().globals == PlayerGlobals.Instance) == isBlue).ToList())
     {
       float dist = Vector3.Distance(t.transform.position, currentPos);
       if (dist < minDist)
@@ -69,7 +73,12 @@ public class MMAIController : MonoBehaviour
   {
     health -= damage;
 
+/*
+    print(GameObject.Find("AIHealthBar"));
+*/
+/*
     GameObject.Find("AIHealthBar").transform.GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
+*/
 
     if (health <= 0)
     {

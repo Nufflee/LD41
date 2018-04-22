@@ -110,21 +110,21 @@ public class WaveManager : MonoBehaviour
   {
     waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
 
-/*    while (waveText.color.a < 1.0f)
+    while (waveText.color.a < 1.0f)
     {
       waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a + 0.03f);
 
       yield return null;
-    }*/
+    }
 
     yield return new WaitForSeconds(1.0f);
 
-/*    while (waveText.color.a > 0.0f)
+    while (waveText.color.a > 0.0f)
     {
       waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a - 0.03f);
 
       yield return null;
-    }*/
+    }
 
     waveText.enabled = false;
     crosshair.SetActive(true);

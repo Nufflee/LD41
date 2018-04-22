@@ -10,8 +10,8 @@ public class MMWaveManager : MonoBehaviour
   private int waveNumber = 1;
   private bool waveInProgress;
   private bool waveGenerating;
-
-  private GameObject enemy;
+  public GameObject enemy;
+  public GameObject aiEnemy;
 
   public List<GameObject> enemies;
 
@@ -21,6 +21,7 @@ public class MMWaveManager : MonoBehaviour
   {
     Instance = this;
     enemy = Resources.Load<GameObject>("MainMenuPrefabs/MainMenuEnemy");
+    aiEnemy = Resources.Load<GameObject>("MainMenuPrefabs/MainMenuAIEnemy");
   }
 
   private void Update()
@@ -62,11 +63,14 @@ public class MMWaveManager : MonoBehaviour
     // Player Room
     GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
     playerRoomEnemy.GetComponent<MMEnemy>().globals = PlayerGlobals.Instance;
+    PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
 
     enemies.Add(playerRoomEnemy);
+    
     // AI Room
-    GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
+    GameObject aiRoomEnemy = Instantiate(aiEnemy, new Vector3(20, 25, 0), Quaternion.identity);
     aiRoomEnemy.GetComponent<MMEnemy>().globals = AIGlobals.Instance;
+    AIGlobals.Instance.enemies.Add(aiRoomEnemy);
 
     enemies.Add(aiRoomEnemy);
   }

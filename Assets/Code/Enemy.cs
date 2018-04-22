@@ -107,6 +107,8 @@ public class Enemy : MonoBehaviour
 
     if (health <= 0)
     {
+      Destroy(healthBar.gameObject);
+
       rigidbody.isKinematic = true;
       agent.enabled = false;
       rigidbody.isKinematic = false;
@@ -125,7 +127,6 @@ public class Enemy : MonoBehaviour
 
         Destroy(pickupable, 20.0f);
       }
-
 
       Destroy(gameObject, 15.0f);
     }

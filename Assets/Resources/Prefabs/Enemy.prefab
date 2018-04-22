@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4317945679150342}
   - component: {fileID: 33121701619868176}
   - component: {fileID: 23115733211132702}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torus_002
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 33386078778157660}
   - component: {fileID: 23144682388114362}
   - component: {fileID: 65041907383397846}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torus_001
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 195443894761687326}
   - component: {fileID: 54885960283402386}
   - component: {fileID: 114570846060653026}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 224212704583184396}
   - component: {fileID: 222320866161375558}
   - component: {fileID: 114614546220496234}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4656466920709356}
   - component: {fileID: 33561969151916760}
   - component: {fileID: 23829911543791410}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torus_000
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 224837419359460498}
   - component: {fileID: 222097915958548410}
   - component: {fileID: 114385650405346614}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: LevelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 223689326341741804}
   - component: {fileID: 114459456281216344}
   - component: {fileID: 114068543580506368}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 33492558390318826}
   - component: {fileID: 23623274061684110}
   - component: {fileID: 64921618292924078}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Icosphere
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 33416455512512628}
   - component: {fileID: 23725115996826290}
   - component: {fileID: 65782955892149044}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torus_003
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 224704447135207034}
   - component: {fileID: 222454393537929182}
   - component: {fileID: 114074315538880106}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -39,8 +39,6 @@ public class Player : MonoBehaviour
 
   public void Damage(float damage)
   {
-    print(health);
-
     health -= damage;
 
     // Update health bar.
