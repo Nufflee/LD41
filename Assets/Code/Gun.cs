@@ -21,6 +21,8 @@ public class Gun : MonoBehaviour
   public bool isReloading;
   private AudioClip gunShotClip;
   private AudioClip reloadClip;
+  private GameObject shellPrefab;
+  private Transform shellSpawn;
 
   private void Start()
   {
@@ -35,6 +37,13 @@ public class Gun : MonoBehaviour
     audioSource = GetComponent<AudioSource>();
     gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
     reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
+    shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
+    shellSpawn = transform.Find("ShellSpawn");
+  }
+
+  public void AddAmmo(int amount) {
+    ammo += amount;
+    ammoText.text = ammo.ToString();
   }
 
   public void Shoot()
@@ -60,6 +69,10 @@ public class Gun : MonoBehaviour
 
       audioSource.PlayOneShot(gunShotClip, 1.0f);
 
+      GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
+      shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
+      Destroy(shell, 30f);
+
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
         if (hit.collider.CompareTag("Enemy"))
@@ -82,11 +95,13 @@ public class Gun : MonoBehaviour
 
           if (hit.collider.CompareTag("Glass"))
           {
-            Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            GameObject glassBulletHole = Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(glassBulletHole, Random.Range(80f, 100f));
           }
           else
           {
-            Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(bulletHole, Random.Range(80f, 100f));
           }
         }
       }

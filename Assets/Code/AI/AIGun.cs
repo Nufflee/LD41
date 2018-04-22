@@ -18,9 +18,10 @@ public class AIGun : MonoBehaviour
   private Text ammoText;
   private AudioClip gunShotClip;
   private AudioClip reloadClip;
-
   private GameObject bulletHolePrefab;
   private Camera AICamera;
+  private GameObject shellPrefab;
+  private Transform shellSpawn;
 
   private void Start()
   {
@@ -35,8 +36,13 @@ public class AIGun : MonoBehaviour
     audioSource = GetComponent<AudioSource>();
     gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
     reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
+    shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
+    shellSpawn = transform.Find("ShellSpawn");
   }
-
+  public void AddAmmo(int amount) {
+    ammo += amount;
+    ammoText.text = ammo.ToString();
+  }
   public void Shoot()
   {
     if (magazineAmmo == 0 && isReloading == false)
@@ -67,6 +73,10 @@ public class AIGun : MonoBehaviour
 
       audioSource.PlayOneShot(gunShotClip, 1.0f);
 
+      GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
+      shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
+      Destroy(shell, 30f);
+
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
@@ -80,7 +90,8 @@ public class AIGun : MonoBehaviour
 
         if (hit.collider.CompareTag("Wall"))
         {
-          Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
+          GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
+          Destroy(bulletHole, Random.Range(80f, 100f));
         }
       }
     }

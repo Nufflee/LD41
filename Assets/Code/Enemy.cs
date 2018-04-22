@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
   private float health;
   public float damage;
   public int level;
+  private GameObject ammoPickupablePrefab;
 
   // Use this for initialization
   private void Start()
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour
     health = maxHealth;
     healthBar = transform.GetChild(0);
     transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = "" + (level + 1);
+    ammoPickupablePrefab = Resources.Load<GameObject>("Prefabs/PU_Ammo");
     agent = GetComponent<NavMeshAgent>();
     rigidbody = GetComponent<Rigidbody>();
   }
@@ -114,8 +116,17 @@ public class Enemy : MonoBehaviour
 
       PlayerGlobals.Instance.enemies.Remove(gameObject);
       AIGlobals.Instance.enemies.Remove(gameObject);
+      AIGlobals.Instance.pickupables.Add(pickupable);
+      Destroy(gameObject);
+      GameObject pickupable = Instantiate(ammoPickupablePrefab, transform.position, transform.rotation);
     }
 
     healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / maxHealth;
+  }
+
+  private void OnDestroy()
+  {
+    PlayerGlobals.Instance.enemies.Remove(gameObject);
+    AIGlobals.Instance.enemies.Remove(gameObject);
   }
 }
