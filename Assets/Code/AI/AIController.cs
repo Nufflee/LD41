@@ -8,20 +8,12 @@ public class AIController : MonoBehaviour
 
   private Transform target;
 
-  private Globals globalsInstance;
-
-  public void SetGlobals(Globals globals) {
-    this.globalsInstance = globals;
-  }
-
   private void Start()
   {
     agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
     agent.updateRotation = false;
     agent.updatePosition = true;
-
-    globalsInstance = AIGlobals.Instance;
   }
 
   private void FixedUpdate()

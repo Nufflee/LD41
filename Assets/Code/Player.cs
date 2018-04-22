@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     health -= damage;
 
     // Update health bar.
-    transform.GetChild(0).GetChild(0).Find("GunDisplay").Find("PlayerHealthBar").GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
+    GameObject.Find("PlayerHealthBar").transform.GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
 
     if (health <= 0)
     {
