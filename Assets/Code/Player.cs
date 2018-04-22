@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
 
   public void Damage(float damage)
   {
+    print(health);
+
     health -= damage;
 
     // Update health bar.
@@ -48,6 +50,11 @@ public class Player : MonoBehaviour
     {
       Destroy(gameObject);
       // TODO: Death
+    }
+
+    if (health > 100)
+    {
+      health = 100;
     }
   }
 }

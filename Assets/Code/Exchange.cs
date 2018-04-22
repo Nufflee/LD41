@@ -16,7 +16,7 @@ public class Exchange : MonoBehaviour
     player = GameObject.FindWithTag("Player");
     aiPlayer = GameObject.FindWithTag("AIPlayer");
     arePlacesSwitched = false;
-    Invoke("SwitchPlaces", Random.Range(5, 5));
+    Invoke("SwitchPlaces", Random.Range(40, 70));
   }
 
   void SwitchPlaces()

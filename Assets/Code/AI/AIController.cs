@@ -51,17 +51,19 @@ public class AIController : MonoBehaviour
     if (target == null && agent.velocity.magnitude <= 0.001f)
     {
       // If we have pickupables, go to them.
-      if(GetClosestPickupable() != null) {
+      if (GetClosestPickupable() != null)
+      {
         agent.SetDestination(GetClosestPickupable().position);
         return;
       }
+
       // Get current AI's ground renderer.
       Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
       NavMeshHit hit;
-      
+
       NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 2.0f, NavMesh.AllAreas);
-      
+
       //  Get a position to wander.
       Vector3 wanderPosition = hit.position; // = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
 
@@ -124,28 +126,28 @@ public class AIController : MonoBehaviour
     return closestEnemy;
   }
 
-    Transform GetClosestPickupable()
+  Transform GetClosestPickupable()
+  {
+    Transform closestPickupable = null;
+    float minDist = Mathf.Infinity;
+    Vector3 currentPos = transform.position;
+
+    List<GameObject> pickupables = AIGlobals.Instance.pickupables;
+
+    foreach (GameObject pickupable in pickupables)
     {
-        Transform closestPickupable = null;
-        float minDist = Mathf.Infinity;
-        Vector3 currentPos = transform.position;
+      if (pickupable == null) continue;
 
-        List<GameObject> pickupables = AIGlobals.Instance.pickupables;
-
-        foreach (GameObject pickupable in pickupables)
-        {
-            if (pickupable == null) continue;
-
-            float dist = Vector3.Distance(pickupable.transform.position, currentPos);
-            if (dist < minDist)
-            {
-                closestPickupable = pickupable.transform;
-                minDist = dist;
-            }
-        }
-
-        return closestPickupable;
+      float dist = Vector3.Distance(pickupable.transform.position, currentPos);
+      if (dist < minDist)
+      {
+        closestPickupable = pickupable.transform;
+        minDist = dist;
+      }
     }
+
+    return closestPickupable;
+  }
 
   public void Damage(float damage)
   {
@@ -157,6 +159,11 @@ public class AIController : MonoBehaviour
     {
       Destroy(gameObject);
       // TODO: Death
+    }
+
+    if (health > 100)
+    {
+      health = 100;
     }
   }
 }

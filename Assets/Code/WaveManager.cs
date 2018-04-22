@@ -9,6 +9,7 @@ public class WaveManager : MonoBehaviour
   private Text waveText;
   private GameObject crosshair;
   public GameObject enemy;
+  public GameObject aiEnemy;
   private int waveNumber = 1;
   private bool waveInProgress;
   private bool waveJustEnded;
@@ -20,6 +21,7 @@ public class WaveManager : MonoBehaviour
     waveText = transform.Find("WaveText").GetComponent<Text>();
     crosshair = transform.Find("Crosshair").gameObject;
     enemy = Resources.Load<GameObject>("Prefabs/Enemy");
+    aiEnemy = Resources.Load<GameObject>("Prefabs/AIEnemy");
   }
 
   private void GenerateWave()

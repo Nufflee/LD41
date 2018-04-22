@@ -41,7 +41,8 @@ public class Gun : MonoBehaviour
     shellSpawn = transform.Find("ShellSpawn");
   }
 
-  public void AddAmmo(int amount) {
+  public void AddAmmo(int amount)
+  {
     ammo += amount;
     ammoText.text = ammo.ToString();
   }
@@ -70,8 +71,8 @@ public class Gun : MonoBehaviour
       audioSource.PlayOneShot(gunShotClip, 1.0f);
 
       GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
-      shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
-      Destroy(shell, 30f);
+      shell.GetComponent<Rigidbody>().AddForce(-transform.forward * 120f);
+      Destroy(shell, 20.0f);
 
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
@@ -87,10 +88,6 @@ public class Gun : MonoBehaviour
 
         if (hit.collider.CompareTag("Wall") || hit.collider.tag.Contains("Ground") || hit.collider.CompareTag("Glass"))
         {
-          GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
-
-          Destroy(sparkGameObject, 1.5f);
-
           Vector3 offset = new Vector3(hit.normal.x == 0.0f ? 1 : hit.normal.x, hit.normal.y == 0.0f ? 1 : hit.normal.y, hit.normal.z == 0.0f ? 1 : hit.normal.z);
 
           if (hit.collider.CompareTag("Glass"))
@@ -102,6 +99,9 @@ public class Gun : MonoBehaviour
           {
             GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
             Destroy(bulletHole, Random.Range(80f, 100f));
+
+            GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+            Destroy(sparkGameObject, 1.5f);
           }
         }
       }

@@ -12,7 +12,7 @@ public class AIGun : MonoBehaviour
   private Animation animation;
   private AudioSource audioSource;
   public bool isReloading;
-  private int magazineAmmo = 3;
+  private int magazineAmmo = 30;
   private int ammo = 90;
   private Text magazineAmmoText;
   private Text ammoText;
@@ -39,10 +39,13 @@ public class AIGun : MonoBehaviour
     shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
     shellSpawn = transform.Find("ShellSpawn");
   }
-  public void AddAmmo(int amount) {
+
+  public void AddAmmo(int amount)
+  {
     ammo += amount;
     ammoText.text = ammo.ToString();
   }
+
   public void Shoot()
   {
     if (magazineAmmo == 0 && isReloading == false)
@@ -74,7 +77,7 @@ public class AIGun : MonoBehaviour
       audioSource.PlayOneShot(gunShotClip, 1.0f);
 
       GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
-      shell.GetComponent<Rigidbody>().AddForce(transform.up * 120f + transform.right * 120f);
+      shell.GetComponent<Rigidbody>().AddForce(transform.right * 120f);
       Destroy(shell, 30f);
 
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))

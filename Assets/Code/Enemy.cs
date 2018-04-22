@@ -107,8 +107,6 @@ public class Enemy : MonoBehaviour
 
     if (health <= 0)
     {
-      print("disabled");
-
       rigidbody.isKinematic = true;
       agent.enabled = false;
       rigidbody.isKinematic = false;
@@ -119,12 +117,17 @@ public class Enemy : MonoBehaviour
       PlayerGlobals.Instance.enemies.Remove(gameObject);
       AIGlobals.Instance.enemies.Remove(gameObject);
 
-      GameObject pickupable = Instantiate(ammoPickupablePrefab, new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z), transform.rotation);
+      if (Random.Range(0, 2) == 0)
+      {
+        GameObject pickupable = Instantiate(ammoPickupablePrefab, new Vector3(transform.position.x + 1.5f, transform.position.y, transform.position.z), transform.rotation);
 
-      AIGlobals.Instance.pickupables.Add(pickupable);
+        AIGlobals.Instance.pickupables.Add(pickupable);
+
+        Destroy(pickupable, 20.0f);
+      }
+
 
       Destroy(gameObject, 15.0f);
-      Destroy(pickupable, 20.0f);
     }
 
     healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / maxHealth;
