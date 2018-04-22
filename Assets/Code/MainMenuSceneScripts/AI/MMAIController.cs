@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class AIController : MonoBehaviour
+public class MMAIController : MonoBehaviour
 {
   public UnityEngine.AI.NavMeshAgent agent { get; private set; }
 
@@ -38,7 +38,7 @@ public class AIController : MonoBehaviour
       transform.LookAt(target);
 
       // Start shooting.
-      transform.GetChild(0).GetChild(0).GetComponent<AIGun>().Shoot();
+      transform.GetChild(0).GetChild(0).GetComponent<MMAIGun>().Shoot();
     }
     else
     {
@@ -52,9 +52,7 @@ public class AIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    bool arePlacesSwitched = Exchange.instance ? Exchange.instance.arePlacesSwitched : false;
-    List<GameObject> enemies = arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
-    foreach (GameObject t in enemies)
+    foreach (GameObject t in MMWaveManager.Instance.enemies)
     {
       float dist = Vector3.Distance(t.transform.position, currentPos);
       if (dist < minDist)
