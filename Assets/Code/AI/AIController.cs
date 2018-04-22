@@ -6,13 +6,16 @@ using UnityEngine.UI;
 public class AIController : MonoBehaviour
 {
   public UnityEngine.AI.NavMeshAgent agent { get; private set; }
-
   private Transform target;
-  private float health = 100;
+  [SerializeField] private float health = 100f;
+  [SerializeField] private float healthRegen = 0.003f;
+
+  private AIGun aiGun;
 
   private void Start()
   {
     agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+    aiGun = transform.GetChild(0).GetChild(0).GetComponent<AIGun>();
 
     agent.updateRotation = false;
     agent.updatePosition = true;
@@ -20,39 +23,41 @@ public class AIController : MonoBehaviour
 
   private void Update()
   {
+    // Regenerate AI's Health.
     if (health < 100)
     {
-      health += 0.003f;
+      health += healthRegen;
     }
   }
 
   private void FixedUpdate()
   {
+    // If there is no target and agent is unable to move, allow him to move.
     if (target == null && agent.isStopped) agent.isStopped = false;
 
-    // Get a target.
+    // Get a target (closest enemy).
     target = GetClosestEnemy();
 
-    // If we don't have a target, don't do anything.
+    // If we don't have a target, we wander for enemies.
     if (target == null && agent.velocity.magnitude <= 0.001f)
     {
-      // Wander
 
+      // Get current AI's ground renderer.
       Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
-      NavMeshHit hit;
-
-      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
-
+      //  Get a position to wander.
       Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
 
+      // Go to the wander position.
       agent.SetDestination(wanderPosition);
 
       return;
     }
 
+    // If we don't have a target and we won't wander, we shouldn't do anything.
     if (target == null)
     {
+      if(AIGlobals.Instance.enemies.Count > 0) print("I have "+AIGlobals.Instance.enemies.Count+" more enemies to go!");
       return;
     }
 
@@ -61,51 +66,46 @@ public class AIController : MonoBehaviour
     // If we are close to our target, we need to start shooting.
     if (distance < 8.0f)
     {
+      // Stop te agent.
       agent.isStopped = true;
 
       // Look at the target.
       transform.LookAt(target);
 
       // Start shooting.
-      transform.GetChild(0).GetChild(0).GetComponent<AIGun>().Shoot();
+      aiGun.Shoot();
     }
     else if (agent.velocity.magnitude <= 0.001f)
     {
-      // Wander
-
-      Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
-
-      NavMeshHit hit;
-
-      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
-
-      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
-
-      agent.SetDestination(wanderPosition);
+      agent.SetDestination(target.position);
     }
   }
 
   Transform GetClosestEnemy()
   {
-    Transform tMin = null;
+    Transform closestEnemy = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
+
+    // Get if the places of exchange are switched.
     bool arePlacesSwitched = Exchange.instance && Exchange.instance.arePlacesSwitched;
+
+    // Get enemies from the required global (AI or Player Global).
     List<GameObject> enemies = arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
 
-    foreach (GameObject t in enemies)
+    foreach (GameObject enemy in enemies)
     {
-      if (t == null) continue;
+      if (enemy == null) continue;
 
-      float dist = Vector3.Distance(t.transform.position, currentPos);
+      float dist = Vector3.Distance(enemy.transform.position, currentPos);
       if (dist < minDist)
       {
-        tMin = t.transform;
+        closestEnemy = enemy.transform;
         minDist = dist;
       }
     }
 
-    return tMin;
+    return closestEnemy;
   }
 
   public void Damage(float damage)
