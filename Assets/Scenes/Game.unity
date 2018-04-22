@@ -615,10 +615,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1589635037337826, guid: f1514f279a1a6674fbf4e2a71a315651, type: 2}
-      propertyPath: m_Name
-      value: AI
-      objectReference: {fileID: 0}
     - target: {fileID: 114914333740771894, guid: f1514f279a1a6674fbf4e2a71a315651,
         type: 2}
       propertyPath: rigidbodyFirstPersonController

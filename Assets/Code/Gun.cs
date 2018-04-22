@@ -64,11 +64,6 @@ public class Gun : MonoBehaviour
         bulletSpawn.position,
         bulletSpawn.rotation);
       
-    // Add velocity to the bullet
-    bullet.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * Time.deltaTime * 5000f;
-
-    // Destroy the bullet after 2 seconds
-    Destroy(bullet, 2.0f);
   }
 
   private void Update()

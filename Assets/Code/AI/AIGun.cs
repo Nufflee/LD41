@@ -8,13 +8,19 @@ public class AIGun : MonoBehaviour
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
 
-  private Camera AICamera;
+  private GameObject bulletPrefab;
+
+  private Transform bulletSpawn;
+
+    private Camera AICamera;
 
   private void Start()
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
     AICamera = transform.GetComponentInParent<Camera>();
+    bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
+    bulletSpawn = transform.Find("BulletSpawn");
   }
 
   public void Shoot()
@@ -26,6 +32,8 @@ public class AIGun : MonoBehaviour
       muzzleFlash.Play();
 
       RaycastHit hit;
+
+      SpawnBullet();
 
       if (Physics.Raycast(AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.2f)), AICamera.transform.forward, out hit))
       {
@@ -41,4 +49,15 @@ public class AIGun : MonoBehaviour
       }
     }
   }
+
+    private void SpawnBullet()
+    {
+        // Create the Bullet from the Bullet Prefab
+        var bullet = (GameObject)Instantiate(
+            bulletPrefab,
+            bulletSpawn.position,
+            bulletSpawn.rotation);
+
+    }
+
 }
