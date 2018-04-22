@@ -60,21 +60,24 @@ public class Gun : MonoBehaviour
 
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
-        GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
-        Vector3 offset = new Vector3(hit.normal.x == 0.0f ? 1 : hit.normal.x, hit.normal.y == 0.0f ? 1 : hit.normal.y, hit.normal.z == 0.0f ? 1 : hit.normal.z);
-        GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
-
-        Destroy(sparkGameObject, 1.5f);
-
         if (hit.collider.CompareTag("Enemy"))
         {
+          GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+
+          Destroy(sparkGameObject, 1.5f);
+
           // balance
           hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
         }
 
         if (hit.collider.CompareTag("Wall"))
         {
-            GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+          GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+
+          Destroy(sparkGameObject, 1.5f);
+
+          Vector3 offset = new Vector3(hit.normal.x == 0.0f ? 1 : hit.normal.x, hit.normal.y == 0.0f ? 1 : hit.normal.y, hit.normal.z == 0.0f ? 1 : hit.normal.z);
+          GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
         }
       }
     }
