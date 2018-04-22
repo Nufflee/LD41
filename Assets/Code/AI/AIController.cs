@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AIController : MonoBehaviour
 {
@@ -58,7 +59,8 @@ public class AIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    foreach (GameObject t in globalsInstance.enemies)
+    List<GameObject> enemies = Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
+    foreach (GameObject t in enemies)
     {
       float dist = Vector3.Distance(t.transform.position, currentPos);
       if (dist < minDist)

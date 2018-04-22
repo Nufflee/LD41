@@ -33,7 +33,6 @@ public class Enemy : MonoBehaviour
   private void Update()
   {
     if (globals.Target == null) return;
-
     healthBar.LookAt(globals.Target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
 
@@ -71,6 +70,7 @@ public class Enemy : MonoBehaviour
     }
     else if (distance <= engageDistance || engaged)
     {
+
       // Set the agent's position to the player's position.
       agent.SetDestination(globals.Target.transform.position);
 

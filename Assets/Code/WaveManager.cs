@@ -50,8 +50,6 @@ public class WaveManager : MonoBehaviour
     float multiplier = waveNumber / 15.0f + 1;
     int enemyCount = (int) Random.Range(3 * multiplier, 6 * multiplier);
 
-    print(enemyCount);
-
     for (int i = 0; i < enemyCount; i++)
     {
       SpawnEnemy();
@@ -64,18 +62,18 @@ public class WaveManager : MonoBehaviour
 
   private void SpawnEnemy()
   {
-    bool switched = FindObjectOfType<Exchange>();
+    bool switched = FindObjectOfType<Exchange>().arePlacesSwitched;
 
     // Player Room
     GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
     playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
 
     PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
-
     // AI Room
     GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
     aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
 
     AIGlobals.Instance.enemies.Add(aiRoomEnemy);
+
   }
 }
