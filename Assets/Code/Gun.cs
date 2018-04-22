@@ -70,7 +70,7 @@ public class Gun : MonoBehaviour
           hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
         }
 
-        if (hit.collider.CompareTag("Wall"))
+        if (hit.collider.CompareTag("Wall") || hit.collider.tag.Contains("Ground"))
         {
           GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
 
