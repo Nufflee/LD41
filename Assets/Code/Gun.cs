@@ -16,7 +16,10 @@ public class Gun : MonoBehaviour
   private Text magazineAmmoText;
   private Text ammoText;
   private Animation animation;
+  private AudioSource audioSource;
   private bool isReloading;
+  private AudioClip gunShotClip;
+  private AudioClip reloadClip;
 
   private void Start()
   {
@@ -27,6 +30,9 @@ public class Gun : MonoBehaviour
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
     animation = GetComponent<Animation>();
+    audioSource = GetComponent<AudioSource>();
+    gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
+    reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
   }
 
   public void Shoot()
@@ -49,6 +55,9 @@ public class Gun : MonoBehaviour
       RaycastHit hit;
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
+
+      audioSource.PlayOneShot(gunShotClip, 1.0f);
+      print("playing " + audioSource.isPlaying);
 
       if (Physics.Raycast(recoilRotation * Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
@@ -101,7 +110,11 @@ public class Gun : MonoBehaviour
 
     animation.Play();
 
-    yield return new WaitForSeconds(animation.clip.length - 0.5f);
+    yield return new WaitForSeconds(0.4f);
+
+    audioSource.PlayOneShot(reloadClip);
+
+    yield return new WaitForSeconds(animation.clip.length - 0.9f);
 
     // What if there's not enough ammo in ammo?
     if (ammo < 30 - magazineAmmo)
