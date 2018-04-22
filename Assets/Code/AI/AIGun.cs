@@ -84,7 +84,8 @@ public class AIGun : MonoBehaviour
 
         if (hit.collider.CompareTag("Enemy"))
         {
-          hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
+          // balance
+          hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
         }
 
         if (hit.collider.CompareTag("Wall"))

@@ -61,7 +61,7 @@ public class MMEnemy : MonoBehaviour
 
       NavMeshHit hit;
 
-      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 2.0f, NavMesh.AllAreas);
 
       Vector3 wanderPosition = hit.position;
 

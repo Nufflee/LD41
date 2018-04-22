@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Wave : MonoBehaviour
 {
@@ -26,7 +24,6 @@ public class Wave : MonoBehaviour
     playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
     playerRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
     playerRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
-    playerRoomEnemy.GetComponent<Enemy>().color = enemy.color;
     PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
 
     // AI Room
@@ -34,7 +31,6 @@ public class Wave : MonoBehaviour
     aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
     aiRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
     aiRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
-    aiRoomEnemy.GetComponent<Enemy>().color = enemy.color;
     AIGlobals.Instance.enemies.Add(aiRoomEnemy);
   }
 
