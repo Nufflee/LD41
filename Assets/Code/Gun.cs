@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
@@ -8,10 +9,12 @@ public class Gun : MonoBehaviour
   private float nextFire = -1;
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
-  private int magazineAmmo = 30;
-  private int ammo = 90;
+  private int magazineAmmo = 2;
+  private int ammo = 3;
   private Text magazineAmmoText;
   private Text ammoText;
+  private Animation animation;
+  private bool isReloading;
 
   private void Start()
   {
@@ -20,6 +23,7 @@ public class Gun : MonoBehaviour
     Canvas canvas = transform.GetComponentInChildren<Canvas>();
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
+    animation = GetComponent<Animation>();
   }
 
   public void Shoot()
@@ -51,9 +55,45 @@ public class Gun : MonoBehaviour
 
   private void Update()
   {
+    if (isReloading) return;
+
     if (Input.GetMouseButton(0))
     {
       Shoot();
     }
+
+
+    if (Input.GetKeyDown(KeyCode.R) && magazineAmmo < 30 && ammo > 0)
+    {
+      StartCoroutine(Reload());
+    }
+  }
+
+  private IEnumerator Reload()
+  {
+    isReloading = true;
+
+    animation.Play();
+
+    yield return new WaitForSeconds(animation.clip.length - 0.5f);
+
+    // What if there's not enough ammo in ammo?
+    if (ammo < 30 - magazineAmmo)
+    {
+      magazineAmmo = magazineAmmo + ammo;
+      ammo = 0;
+    }
+    else
+    {
+      ammo = ammo - (30 - magazineAmmo);
+      magazineAmmo = 30;
+    }
+
+    ammoText.text = ammo.ToString();
+    magazineAmmoText.text = magazineAmmo.ToString();
+
+    yield return new WaitForSeconds(0.5f);
+
+    isReloading = false;
   }
 }
