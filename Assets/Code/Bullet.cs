@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
 
     void Update() {
         // Move bullet.
-        transform.position += transform.right * speed * Time.deltaTime;
+        transform.position += transform.right * speed * Time.deltaTime + (-transform.up * Time.deltaTime * 1f);
     }
 
     private void OnCollisionEnter(Collision other)

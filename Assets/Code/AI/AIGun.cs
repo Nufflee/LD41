@@ -58,6 +58,6 @@ public class AIGun : MonoBehaviour
             bulletSpawn.position,
             bulletSpawn.rotation);
 
-    }
+    } 
 
 }
