@@ -99,6 +99,8 @@ public class Enemy : MonoBehaviour
 
   public void Damage(float damage)
   {
+    if (isDead) return;
+
     health -= damage;
 
     engaged = true;
@@ -116,9 +118,13 @@ public class Enemy : MonoBehaviour
 
       PlayerGlobals.Instance.enemies.Remove(gameObject);
       AIGlobals.Instance.enemies.Remove(gameObject);
+
+      GameObject pickupable = Instantiate(ammoPickupablePrefab, new Vector3(transform.position.x + 1.0f, transform.position.y, transform.position.z), transform.rotation);
+
       AIGlobals.Instance.pickupables.Add(pickupable);
-      Destroy(gameObject);
-      GameObject pickupable = Instantiate(ammoPickupablePrefab, transform.position, transform.rotation);
+
+      Destroy(gameObject, 15.0f);
+      Destroy(pickupable, 20.0f);
     }
 
     healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / maxHealth;
