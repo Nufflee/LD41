@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class AIController : MonoBehaviour
 {
-  public UnityEngine.AI.NavMeshAgent agent { get; private set; }
+  public NavMeshAgent agent { get; private set; }
   private Transform target;
   [SerializeField] private float health = 100f;
   [SerializeField] private float healthRegen = 0.003f;
@@ -14,7 +14,7 @@ public class AIController : MonoBehaviour
 
   private void Start()
   {
-    agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+    agent = GetComponent<NavMeshAgent>();
     aiGun = transform.GetChild(0).GetChild(0).GetComponent<AIGun>();
 
     agent.updateRotation = false;
@@ -35,13 +35,21 @@ public class AIController : MonoBehaviour
     // If there is no target and agent is unable to move, allow him to move.
     if (target == null && agent.isStopped) agent.isStopped = false;
 
+    if (aiGun.isReloading && agent.speed != 1.8f)
+    {
+      agent.speed = 1.8f;
+    }
+    else if (aiGun.isReloading == false && agent.speed != 3.5f)
+    {
+      agent.speed = 3.5f;
+    }
+
     // Get a target (closest enemy).
     target = GetClosestEnemy();
 
     // If we don't have a target, we wander for enemies.
     if (target == null && agent.velocity.magnitude <= 0.001f)
     {
-
       // Get current AI's ground renderer.
       Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
@@ -57,7 +65,7 @@ public class AIController : MonoBehaviour
     // If we don't have a target and we won't wander, we shouldn't do anything.
     if (target == null)
     {
-      if(AIGlobals.Instance.enemies.Count > 0) print("I have "+AIGlobals.Instance.enemies.Count+" more enemies to go!");
+      if (AIGlobals.Instance.enemies.Count > 0) print("I have " + AIGlobals.Instance.enemies.Count + " more enemies to go!");
       return;
     }
 

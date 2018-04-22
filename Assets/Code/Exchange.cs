@@ -16,7 +16,7 @@ public class Exchange : MonoBehaviour
     player = GameObject.FindWithTag("Player");
     aiPlayer = GameObject.FindWithTag("AIPlayer");
     arePlacesSwitched = false;
-    Invoke("SwitchPlaces", Random.Range(5, 10));
+    Invoke("SwitchPlaces", Random.Range(40, 70));
   }
 
   void SwitchPlaces()
@@ -30,16 +30,17 @@ public class Exchange : MonoBehaviour
     player.transform.position = p;
     aiPlayer.GetComponent<NavMeshAgent>().enabled = true;
 
-
     // Change the globals for existing enemies.
-    foreach (GameObject enemy in PlayerGlobals.Instance.enemies) {
+    foreach (GameObject enemy in PlayerGlobals.Instance.enemies)
+    {
       enemy.GetComponent<Enemy>().globals = arePlacesSwitched ? AIGlobals.Instance : PlayerGlobals.Instance;
     }
-      
-    foreach (GameObject enemy in AIGlobals.Instance.enemies) {
+
+    foreach (GameObject enemy in AIGlobals.Instance.enemies)
+    {
       enemy.GetComponent<Enemy>().globals = arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance;
     }
-      
-    Invoke("SwitchPlaces", Random.Range(5, 10));
+
+    Invoke("SwitchPlaces", Random.Range(40, 70));
   }
 }
