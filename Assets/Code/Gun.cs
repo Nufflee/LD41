@@ -16,6 +16,10 @@ public class Gun : MonoBehaviour
   private Animation animation;
   private bool isReloading;
 
+  private GameObject bulletPrefab;
+
+  private Transform bulletSpawn;
+
   private void Start()
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
@@ -24,6 +28,8 @@ public class Gun : MonoBehaviour
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
     ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
     animation = GetComponent<Animation>();
+    bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
+    bulletSpawn = transform.Find("BulletSpawn");
   }
 
   public void Shoot()
@@ -38,6 +44,8 @@ public class Gun : MonoBehaviour
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
 
+      SpawnBullet();
+
       if (Physics.Raycast(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
@@ -51,6 +59,15 @@ public class Gun : MonoBehaviour
         }
       }
     }
+  }
+
+  private void SpawnBullet() {
+    // Create the Bullet from the Bullet Prefab
+    var bullet = (GameObject)Instantiate(
+        bulletPrefab,
+        bulletSpawn.position,
+        bulletSpawn.rotation);
+      
   }
 
   private void Update()
