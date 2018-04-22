@@ -18,12 +18,14 @@ public class AIGun : MonoBehaviour
   private Text magazineAmmoText;
   private Text ammoText;
 
+  private GameObject bulletHolePrefab;
   private Camera AICamera;
 
   private void Start()
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
+    bulletHolePrefab = Resources.Load<GameObject>("Prefabs/BulletHole");
     AICamera = transform.GetComponentInParent<Camera>();
     Canvas canvas = transform.GetComponentInChildren<Canvas>();
     magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
@@ -63,7 +65,7 @@ public class AIGun : MonoBehaviour
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
-
+        GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
         Destroy(sparkGameObject, 1.5f);
 
         if (hit.collider.CompareTag("Enemy"))
