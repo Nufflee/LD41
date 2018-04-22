@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AIGun : MonoBehaviour
 {
@@ -7,25 +10,36 @@ public class AIGun : MonoBehaviour
   private float nextFire = -1;
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
+  private Animation animation;
+  private bool isReloading;
+  private int magazineAmmo = 30;
+  private int ammo = 90;
+  private Text magazineAmmoText;
+  private Text ammoText;
 
-  private GameObject bulletPrefab;
-
-  private Transform bulletSpawn;
-
-    private Camera AICamera;
+  private Camera AICamera;
 
   private void Start()
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
     AICamera = transform.GetComponentInParent<Camera>();
-    bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
-    bulletSpawn = transform.Find("BulletSpawn");
+    Canvas canvas = transform.GetComponentInChildren<Canvas>();
+    magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
+    ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
+    animation = GetComponent<Animation>();
   }
 
   public void Shoot()
   {
-    if (Time.time > nextFire)
+    if (magazineAmmo == 0 && isReloading == false)
+    {
+      StartCoroutine(Reload());
+
+      return;
+    }
+
+    if (Time.time > nextFire && isReloading == false)
     {
       nextFire = Time.time + fireRate;
 
@@ -33,7 +47,7 @@ public class AIGun : MonoBehaviour
 
       RaycastHit hit;
 
-      SpawnBullet();
+      magazineAmmoText.text = (--magazineAmmo).ToString();
 
       if (Physics.Raycast(AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.2f)), AICamera.transform.forward, out hit))
       {
@@ -50,14 +64,31 @@ public class AIGun : MonoBehaviour
     }
   }
 
-    private void SpawnBullet()
+  private IEnumerator Reload()
+  {
+    isReloading = true;
+
+    animation.Play();
+
+    yield return new WaitForSeconds(animation.clip.length - 0.5f);
+
+    // What if there's not enough ammo in ammo?
+    if (ammo < 30 - magazineAmmo)
     {
-        // Create the Bullet from the Bullet Prefab
-        var bullet = (GameObject)Instantiate(
-            bulletPrefab,
-            bulletSpawn.position,
-            bulletSpawn.rotation);
+      magazineAmmo = magazineAmmo + ammo;
+      ammo = 0;
+    }
+    else
+    {
+      ammo = ammo - (30 - magazineAmmo);
+      magazineAmmo = 30;
+    }
 
-    } 
+    ammoText.text = ammo.ToString();
+    magazineAmmoText.text = magazineAmmo.ToString();
 
+    yield return new WaitForSeconds(0.5f);
+
+    isReloading = false;
+  }
 }

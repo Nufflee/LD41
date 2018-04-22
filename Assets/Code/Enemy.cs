@@ -49,7 +49,16 @@ public class Enemy : MonoBehaviour
 
     if (distance < 2.0f)
     {
-      globals.Target.GetComponent<Player>().Damage(0.06f);
+      if (globals.Target.GetComponent<Player>() != null)
+      {
+        globals.Target.GetComponent<Player>().Damage(0.06f);
+
+      }
+      else
+      {
+        globals.Target.GetComponent<AIController>().Damage(0.06f);
+      }
+      
 
       return;
     }

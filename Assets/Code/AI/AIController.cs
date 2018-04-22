@@ -1,12 +1,13 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class AIController : MonoBehaviour
 {
   public UnityEngine.AI.NavMeshAgent agent { get; private set; }
 
   private Transform target;
+  private float health = 100;
 
   private void Start()
   {
@@ -63,5 +64,18 @@ public class AIController : MonoBehaviour
     }
 
     return tMin;
+  }
+
+  public void Damage(float damage)
+  {
+    health -= damage;
+
+    GameObject.Find("AIHealthBar").transform.GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
+
+    if (health <= 0)
+    {
+      Destroy(gameObject);
+      // TODO: Death
+    }
   }
 }
