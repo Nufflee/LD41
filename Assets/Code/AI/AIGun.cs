@@ -39,8 +39,17 @@ public class AIGun : MonoBehaviour
       return;
     }
 
-    if (Time.time > nextFire && isReloading == false)
+    if (Time.time > nextFire && isReloading == false && magazineAmmo > 0)
     {
+      Quaternion recoilRotation = Quaternion.identity;
+
+      if (transform.localRotation.eulerAngles.z > 0.0f)
+      {
+        recoilRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, transform.localRotation.eulerAngles.z / 3));
+      }
+
+      transform.Rotate(new Vector3(0, 0, 1), 1.0f);
+
       nextFire = Time.time + fireRate;
 
       muzzleFlash.Play();
@@ -49,7 +58,7 @@ public class AIGun : MonoBehaviour
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
 
-      if (Physics.Raycast(AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.2f)), AICamera.transform.forward, out hit))
+      if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
         GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
 
@@ -64,8 +73,22 @@ public class AIGun : MonoBehaviour
     }
   }
 
+  private void Update()
+  {
+    if (transform.localRotation.eulerAngles.z > 0.0f && transform.localRotation.eulerAngles.z < 20.0f)
+    {
+      transform.Rotate(new Vector3(0, 0, 1), -0.08f);
+    }
+    else
+    {
+      transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
+    }
+  }
+
   private IEnumerator Reload()
   {
+    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
+
     isReloading = true;
 
     animation.Play();
