@@ -92,7 +92,8 @@ public class AIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    List<GameObject> enemies = Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
+    bool arePlacesSwitched = Exchange.instance ? Exchange.instance.arePlacesSwitched : false;
+    List<GameObject> enemies = arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
     foreach (GameObject t in enemies)
     {
       float dist = Vector3.Distance(t.transform.position, currentPos);
