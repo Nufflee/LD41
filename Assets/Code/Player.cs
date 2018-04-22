@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+
 public class Player : MonoBehaviour
 {
   private float health = 100;
 
-  // Use this for initialization
-  private void Start()
-  {
-  }
-
   // Update is called once per frame
   private void Update()
   {
+    if (health < 100)
+    {
+      health += 0.005f;
+    }
   }
 
   public void Damage(float damage)

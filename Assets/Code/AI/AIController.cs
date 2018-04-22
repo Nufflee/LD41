@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class AIController : MonoBehaviour
@@ -17,6 +18,16 @@ public class AIController : MonoBehaviour
     agent.updatePosition = true;
   }
 
+  private void Update()
+  {
+    if (health < 100)
+    {
+      health += 0.003f;
+    }
+
+    print("ai: " + health);
+  }
+
   private void FixedUpdate()
   {
     if (target == null && agent.isStopped) agent.isStopped = false;
@@ -25,7 +36,27 @@ public class AIController : MonoBehaviour
     target = GetClosestEnemy();
 
     // If we don't have a target, don't do anything.
-    if (target == null) return;
+    if (target == null && agent.velocity.magnitude <= 0.001f)
+    {
+      // Wander
+
+      Renderer groundRenderer = AIGlobals.Instance.Ground.GetComponent<Renderer>();
+
+      NavMeshHit hit;
+
+      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+
+      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
+
+      agent.SetDestination(wanderPosition);
+
+      return;
+    }
+
+    if (target == null)
+    {
+      return;
+    }
 
     float distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
@@ -40,10 +71,19 @@ public class AIController : MonoBehaviour
       // Start shooting.
       transform.GetChild(0).GetChild(0).GetComponent<AIGun>().Shoot();
     }
-    else
+    else if (agent.velocity.magnitude <= 0.001f)
     {
-      // Walk towards the target.
-      agent.SetDestination(target.position);
+      // Wander
+
+      Renderer groundRenderer = AIGlobals.Instance.Ground.GetComponent<Renderer>();
+
+      NavMeshHit hit;
+
+      NavMesh.SamplePosition(new Vector3(Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+
+      Vector3 wanderPosition = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
+
+      agent.SetDestination(wanderPosition);
     }
   }
 

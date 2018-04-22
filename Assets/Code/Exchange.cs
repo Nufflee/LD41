@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class Exchange : MonoBehaviour
@@ -33,15 +31,16 @@ public class Exchange : MonoBehaviour
     aiPlayer.GetComponent<NavMeshAgent>().enabled = true;
 
     // Change the globals for enemies.
-    foreach(GameObject enemy in PlayerGlobals.Instance.enemies) 
+    foreach (GameObject enemy in PlayerGlobals.Instance.enemies)
     {
       enemy.GetComponent<Enemy>().globals = AIGlobals.Instance;
     }
+
     foreach (GameObject enemy in AIGlobals.Instance.enemies)
     {
-        enemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
+      enemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
     }
 
-   Invoke("SwitchPlaces", Random.Range(30, 80));
+    Invoke("SwitchPlaces", Random.Range(30, 80));
   }
 }
