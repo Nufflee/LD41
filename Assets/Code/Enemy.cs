@@ -28,10 +28,11 @@ public class Enemy : MonoBehaviour
 
       return;
     }
+
     health = maxHealth;
     GetComponent<Renderer>().material.color = color;
     healthBar = transform.GetChild(0);
-    transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = ""+(level+1);
+    transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = "" + (level + 1);
     agent = GetComponent<NavMeshAgent>();
   }
 
@@ -72,7 +73,6 @@ public class Enemy : MonoBehaviour
       {
         globals.Target.GetComponent<AIController>().Damage(damage);
       }
-
 
       return;
     }

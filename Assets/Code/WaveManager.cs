@@ -29,11 +29,13 @@ public class WaveManager : MonoBehaviour
     List<WaveEnemy> enemies = new List<WaveEnemy>();
     for (int i = 0; i < enemiesCount; i++)
     {
-      WaveEnemy enemyType = new WaveEnemy();
-      enemyType.health = 100f + (waveNumber > 10 ? waveNumber * 0.75f : waveNumber * 0.35f);
-      enemyType.damage = 0.023f + (waveNumber > 5 ? waveNumber * 0.045f : waveNumber * 0.01f);
-      enemyType.color = new Color(waveNumber * .35f, waveNumber * .75f, waveNumber * .4f);
-      enemyType.level = waveNumber;
+      WaveEnemy enemyType = new WaveEnemy
+      {
+        health = 100f + (waveNumber > 10 ? waveNumber * 0.75f : waveNumber * 0.35f),
+        damage = 0.023f + (waveNumber > 5 ? waveNumber * 0.045f : waveNumber * 0.01f),
+        color = new Color(waveNumber * .35f, waveNumber * .75f, waveNumber * .4f),
+        level = waveNumber
+      };
       enemies.Add(enemyType);
     }
 
