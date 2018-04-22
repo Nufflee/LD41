@@ -9,8 +9,8 @@ public class Gun : MonoBehaviour
   private float nextFire = -1;
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
-  private int magazineAmmo = 2;
-  private int ammo = 3;
+  private int magazineAmmo = 30;
+  private int ammo = 90;
   private Text magazineAmmoText;
   private Text ammoText;
   private Animation animation;
@@ -61,13 +61,13 @@ public class Gun : MonoBehaviour
     }
   }
 
-  private void SpawnBullet() {
+  private void SpawnBullet()
+  {
     // Create the Bullet from the Bullet Prefab
-    var bullet = (GameObject)Instantiate(
-        bulletPrefab,
-        bulletSpawn.position,
-        bulletSpawn.rotation);
-      
+    var bullet = (GameObject) Instantiate(
+      bulletPrefab,
+      bulletSpawn.position,
+      bulletSpawn.rotation);
   }
 
   private void Update()
