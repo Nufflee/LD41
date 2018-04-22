@@ -7,17 +7,18 @@ public class Enemy : MonoBehaviour
   public Globals globals;
 
   private NavMeshAgent agent;
+  private Rigidbody rigidbody;
 
   private Transform healthBar;
 
   private float engageDistance = 5.0f;
   private bool engaged;
+  private bool isDead;
 
   public float maxHealth;
   private float health;
   public float damage;
   public int level;
-  public Color32 color;
 
   // Use this for initialization
   private void Start()
@@ -30,25 +31,16 @@ public class Enemy : MonoBehaviour
     }
 
     health = maxHealth;
-    GetComponent<Renderer>().material.color = color;
     healthBar = transform.GetChild(0);
     transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = "" + (level + 1);
     agent = GetComponent<NavMeshAgent>();
+    rigidbody = GetComponent<Rigidbody>();
   }
 
   // Update is called once per frame
   private void Update()
   {
-    if (globals.name == PlayerGlobals.Instance.name)
-    {
-      GetComponent<Renderer>().material.color = Color.red;
-    }
-    else
-    {
-      GetComponent<Renderer>().material.color = Color.blue;
-    }
-
-    if (globals.Target == null) return;
+    if (globals.Target == null || isDead) return;
     healthBar.LookAt(PlayerGlobals.Instance.Target.transform);
     healthBar.eulerAngles = new Vector3(0f, healthBar.eulerAngles.y, 0f);
 
@@ -59,7 +51,7 @@ public class Enemy : MonoBehaviour
 
     if (agent.isOnNavMesh == false) return;
 
-    agent.baseOffset = 0.75f + Mathf.Sin(Time.time * 4.0f) / 26.0f;
+    agent.baseOffset = 2.75f + Mathf.Sin(Time.time * 4.0f) / 26.0f;
 
     float distance = Vector3.Distance(agent.transform.position, globals.Target.transform.position);
 
@@ -85,7 +77,7 @@ public class Enemy : MonoBehaviour
 
       NavMeshHit hit;
 
-      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 1.0f, NavMesh.AllAreas);
+      NavMesh.SamplePosition(new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z)), out hit, 2.0f, NavMesh.AllAreas);
 
       Vector3 wanderPosition = hit.position;
       // = new Vector3(transform.position.x + Random.Range(-groundRenderer.bounds.extents.x, groundRenderer.bounds.extents.x), 1, transform.position.z + Random.Range(-groundRenderer.bounds.extents.z, groundRenderer.bounds.extents.z));
@@ -111,15 +103,19 @@ public class Enemy : MonoBehaviour
 
     if (health <= 0)
     {
-      Destroy(gameObject);
+      print("disabled");
+
+      rigidbody.isKinematic = true;
+      agent.enabled = false;
+      rigidbody.isKinematic = false;
+      transform.Find("Torus_000").GetComponent<Renderer>().material.SetFloat("_Glow", 1);
+      transform.Find("Torus_002").GetComponent<Renderer>().material.SetFloat("_Glow", 1);
+      isDead = true;
+
+      PlayerGlobals.Instance.enemies.Remove(gameObject);
+      AIGlobals.Instance.enemies.Remove(gameObject);
     }
 
     healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / maxHealth;
-  }
-
-  private void OnDestroy()
-  {
-    PlayerGlobals.Instance.enemies.Remove(gameObject);
-    AIGlobals.Instance.enemies.Remove(gameObject);
   }
 }

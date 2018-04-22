@@ -54,12 +54,11 @@ public class MMWaveManager : MonoBehaviour
     }
 
     waveNumber++;
-        waveGenerating = false;
+    waveGenerating = false;
   }
 
   private void SpawnEnemy()
   {
-
     // Player Room
     GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
     playerRoomEnemy.GetComponent<MMEnemy>().globals = PlayerGlobals.Instance;
@@ -70,6 +69,5 @@ public class MMWaveManager : MonoBehaviour
     aiRoomEnemy.GetComponent<MMEnemy>().globals = AIGlobals.Instance;
 
     enemies.Add(aiRoomEnemy);
-
   }
 }
