@@ -11,7 +11,7 @@ public class WaveManager : MonoBehaviour
   private GameObject enemy;
   private int waveNumber = 1;
   private bool waveInProgress;
-
+  private bool waveJustEnded;
 
   private void Start()
   {
@@ -22,7 +22,19 @@ public class WaveManager : MonoBehaviour
 
   private void Update()
   {
-    if (PlayerGlobals.Instance.enemies.Count + AIGlobals.Instance.enemies.Count == 0 && waveNumber > 1)
+    if ((Exchange.instance.arePlacesSwitched ? AIGlobals.Instance.enemies : PlayerGlobals.Instance.enemies).Count == 0 && waveJustEnded && waveInProgress == false)
+    {
+      waveJustEnded = false;
+
+      crosshair.SetActive(false);
+
+      waveText.enabled = true;
+      waveText.text = "WAVE ENDED";
+
+      StartCoroutine(WaveEndText());
+    }
+
+    if ((Exchange.instance.arePlacesSwitched ? AIGlobals.Instance.enemies : PlayerGlobals.Instance.enemies).Count == 0 && waveNumber > 1)
     {
       waveInProgress = false;
     }
@@ -32,7 +44,7 @@ public class WaveManager : MonoBehaviour
       crosshair.SetActive(false);
 
       waveText.enabled = true;
-      waveText.text = "Wave " + waveNumber;
+      waveText.text = "WAVE " + waveNumber;
 
       waveInProgress = true;
 
@@ -42,7 +54,23 @@ public class WaveManager : MonoBehaviour
 
   private IEnumerator SpawnWave()
   {
-    yield return new WaitForSeconds(2.0f);
+    waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
+
+    while (waveText.color.a < 1.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a + 0.03f);
+
+      yield return null;
+    }
+
+    yield return new WaitForSeconds(1.0f);
+
+    while (waveText.color.a > 0.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a - 0.03f);
+
+      yield return null;
+    }
 
     waveText.enabled = false;
     crosshair.SetActive(true);
@@ -58,6 +86,31 @@ public class WaveManager : MonoBehaviour
     }
 
     waveNumber++;
+    waveJustEnded = true;
+  }
+
+  private IEnumerator WaveEndText()
+  {
+    waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
+
+    while (waveText.color.a < 1.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a + 0.03f);
+
+      yield return null;
+    }
+
+    yield return new WaitForSeconds(1.0f);
+
+    while (waveText.color.a > 0.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a - 0.03f);
+
+      yield return null;
+    }
+
+    waveText.enabled = false;
+    crosshair.SetActive(true);
   }
 
   private void SpawnEnemy()
@@ -69,11 +122,11 @@ public class WaveManager : MonoBehaviour
     playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
 
     PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
+
     // AI Room
     GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
     aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
 
     AIGlobals.Instance.enemies.Add(aiRoomEnemy);
-
   }
 }

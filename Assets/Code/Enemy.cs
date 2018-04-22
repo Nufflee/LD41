@@ -52,13 +52,12 @@ public class Enemy : MonoBehaviour
       if (globals.Target.GetComponent<Player>() != null)
       {
         globals.Target.GetComponent<Player>().Damage(0.06f);
-
       }
       else
       {
         globals.Target.GetComponent<AIController>().Damage(0.06f);
       }
-      
+
 
       return;
     }
@@ -79,7 +78,6 @@ public class Enemy : MonoBehaviour
     }
     else if (distance <= engageDistance || engaged)
     {
-
       // Set the agent's position to the player's position.
       agent.SetDestination(globals.Target.transform.position);
 

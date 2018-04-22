@@ -24,8 +24,6 @@ public class AIController : MonoBehaviour
     {
       health += 0.003f;
     }
-
-    print("ai: " + health);
   }
 
   private void FixedUpdate()
@@ -40,7 +38,7 @@ public class AIController : MonoBehaviour
     {
       // Wander
 
-      Renderer groundRenderer = AIGlobals.Instance.Ground.GetComponent<Renderer>();
+      Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
       NavMeshHit hit;
 
@@ -75,7 +73,7 @@ public class AIController : MonoBehaviour
     {
       // Wander
 
-      Renderer groundRenderer = AIGlobals.Instance.Ground.GetComponent<Renderer>();
+      Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
       NavMeshHit hit;
 
@@ -92,10 +90,13 @@ public class AIController : MonoBehaviour
     Transform tMin = null;
     float minDist = Mathf.Infinity;
     Vector3 currentPos = transform.position;
-    bool arePlacesSwitched = Exchange.instance ? Exchange.instance.arePlacesSwitched : false;
+    bool arePlacesSwitched = Exchange.instance && Exchange.instance.arePlacesSwitched;
     List<GameObject> enemies = arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies;
+
     foreach (GameObject t in enemies)
     {
+      if (t == null) continue;
+
       float dist = Vector3.Distance(t.transform.position, currentPos);
       if (dist < minDist)
       {
