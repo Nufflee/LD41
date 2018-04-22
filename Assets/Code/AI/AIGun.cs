@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class AIGun : MonoBehaviour
@@ -36,7 +35,8 @@ public class AIGun : MonoBehaviour
 
         if (hit.collider.CompareTag("Enemy"))
         {
-          hit.collider.gameObject.GetComponent<Enemy>().Damage(33.0f / (Vector3.Distance(transform.position, hit.point) / 4));
+          // balance
+          hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 20.0f));
         }
       }
     }

@@ -5,34 +5,49 @@ using UnityEngine.AI;
 
 public class Exchange : MonoBehaviour
 {
+  private GameObject player;
+  private GameObject aiPlayer;
 
-    private GameObject player;
-    private GameObject aiPlayer;
-	
-	private bool arePlacesSwitched;
+  public bool arePlacesSwitched;
+
+  void Start()
+  {
+    player = GameObject.FindWithTag("Player");
+    aiPlayer = GameObject.FindWithTag("AIPlayer");
+    Invoke("SwitchPlaces", Random.Range(1, 1));
+    arePlacesSwitched = false;
+  }
+
+  void SwitchPlaces()
+  {
+    arePlacesSwitched = !arePlacesSwitched;
+
+    // Switch locations
+    aiPlayer.GetComponent<NavMeshAgent>().enabled = false;
+    Vector3 p = aiPlayer.transform.position;
+    aiPlayer.transform.position = player.transform.position;
+    player.transform.position = p;
+    aiPlayer.GetComponent<NavMeshAgent>().enabled = true;
 
 
-    void Start()
+    foreach (GameObject enemy in PlayerGlobals.Instance.enemies)
     {
-        player = GameObject.FindWithTag("Player");
-        aiPlayer = GameObject.FindWithTag("AIPlayer");
-        Invoke("SwitchPlaces", Random.Range(30, 80));
-        arePlacesSwitched = false;
+      enemy.GetComponent<Enemy>().globals = AIGlobals.Instance;
     }
 
-    void SwitchPlaces()
+    foreach (GameObject enemy in AIGlobals.Instance.enemies)
     {
-        arePlacesSwitched = !arePlacesSwitched;
-
-		// Switch locations
-        aiPlayer.GetComponent<NavMeshAgent>().enabled = false;
-        Vector3 p = aiPlayer.transform.position;
-        aiPlayer.transform.position = player.transform.position;
-        player.transform.position = p;
-        aiPlayer.GetComponent<NavMeshAgent>().enabled = true;
-
-        // Change the globals.
-		aiPlayer.GetComponent<AIController>().SetGlobals(arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance);
-        Invoke("SwitchPlaces", Random.Range(30, 80));
+      enemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
     }
+
+    Globals playerGlobals = PlayerGlobals.Instance;
+    print(PlayerGlobals.Instance.Target);
+    PlayerGlobals.Instance.Ground = AIGlobals.Instance.Ground;
+    AIGlobals.Instance.Ground = playerGlobals.Ground;
+    print(PlayerGlobals.Instance.Target);
+
+    // Change the globals.
+    // aiPlayer.GetComponent<AIController>().SetGlobals(arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance);
+    Invoke("SwitchPlaces", Random.Range(30, 80));
+  }
 }

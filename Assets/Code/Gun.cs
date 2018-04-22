@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
@@ -8,22 +8,31 @@ public class Gun : MonoBehaviour
   private float nextFire = -1;
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
+  private int magazineAmmo = 30;
+  private int ammo = 90;
+  private Text magazineAmmoText;
+  private Text ammoText;
 
   private void Start()
   {
     muzzleFlash = transform.Find("MuzzleFlash").GetComponent<ParticleSystem>();
     sparkEffect = Resources.Load<GameObject>("Prefabs/SparkEffect");
+    Canvas canvas = transform.GetComponentInChildren<Canvas>();
+    magazineAmmoText = canvas.transform.Find("MagazineAmmoText").GetComponent<Text>();
+    ammoText = canvas.transform.Find("AmmoText").GetComponent<Text>();
   }
 
   public void Shoot()
   {
-    if (Time.time > nextFire)
+    if (Time.time > nextFire && magazineAmmo > 0)
     {
       nextFire = Time.time + fireRate;
 
       muzzleFlash.Play();
 
       RaycastHit hit;
+
+      magazineAmmoText.text = (--magazineAmmo).ToString();
 
       if (Physics.Raycast(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f)), Camera.main.transform.forward, out hit))
       {
@@ -33,8 +42,8 @@ public class Gun : MonoBehaviour
 
         if (hit.collider.CompareTag("Enemy"))
         {
-          print("damage: " + 33.0f / (Vector3.Distance(transform.position, hit.point) / 2));
-          hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(33.0f / (Vector3.Distance(transform.position, hit.point) / 8), 0.0f, 33.0f));
+          // balance
+          hit.collider.gameObject.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
         }
       }
     }

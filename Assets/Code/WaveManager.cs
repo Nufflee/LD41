@@ -64,15 +64,17 @@ public class WaveManager : MonoBehaviour
 
   private void SpawnEnemy()
   {
+    bool switched = FindObjectOfType<Exchange>();
+
     // Player Room
     GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
-    playerRoomEnemy.GetComponent<Enemy>().globals = PlayerGlobals.Instance;
+    playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
 
     PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
 
     // AI Room
     GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
-    aiRoomEnemy.GetComponent<Enemy>().globals = AIGlobals.Instance;
+    aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
 
     AIGlobals.Instance.enemies.Add(aiRoomEnemy);
   }
