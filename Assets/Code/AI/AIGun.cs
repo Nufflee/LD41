@@ -39,7 +39,10 @@ public class AIGun : MonoBehaviour
     shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
     shellSpawn = transform.Find("ShellSpawn");
   }
-
+  public void AddAmmo(int amount) {
+    ammo += amount;
+    ammoText.text = ammo.ToString();
+  }
   public void Shoot()
   {
     if (magazineAmmo == 0 && isReloading == false)

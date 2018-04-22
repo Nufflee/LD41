@@ -41,6 +41,11 @@ public class Gun : MonoBehaviour
     shellSpawn = transform.Find("ShellSpawn");
   }
 
+  public void AddAmmo(int amount) {
+    ammo += amount;
+    ammoText.text = ammo.ToString();
+  }
+
   public void Shoot()
   {
     if (Time.time > nextFire && magazineAmmo > 0)

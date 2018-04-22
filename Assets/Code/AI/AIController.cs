@@ -50,6 +50,11 @@ public class AIController : MonoBehaviour
     // If we don't have a target, we wander for enemies.
     if (target == null && agent.velocity.magnitude <= 0.001f)
     {
+      // If we have pickupables, go to them.
+      if(GetClosestPickupable() != null) {
+        agent.SetDestination(GetClosestPickupable().position);
+        return;
+      }
       // Get current AI's ground renderer.
       Renderer groundRenderer = (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance).Ground.GetComponent<Renderer>();
 
@@ -69,9 +74,6 @@ public class AIController : MonoBehaviour
     // If we don't have a target and we won't wander, we shouldn't do anything.
     if (target == null)
     {
-/*
-      if (AIGlobals.Instance.enemies.Count > 0) print("I have " + AIGlobals.Instance.enemies.Count + " more enemies to go!");
-*/
       return;
     }
 
@@ -121,6 +123,29 @@ public class AIController : MonoBehaviour
 
     return closestEnemy;
   }
+
+    Transform GetClosestPickupable()
+    {
+        Transform closestPickupable = null;
+        float minDist = Mathf.Infinity;
+        Vector3 currentPos = transform.position;
+
+        List<GameObject> pickupables = AIGlobals.Instance.pickupables;
+
+        foreach (GameObject pickupable in pickupables)
+        {
+            if (pickupable == null) continue;
+
+            float dist = Vector3.Distance(pickupable.transform.position, currentPos);
+            if (dist < minDist)
+            {
+                closestPickupable = pickupable.transform;
+                minDist = dist;
+            }
+        }
+
+        return closestPickupable;
+    }
 
   public void Damage(float damage)
   {

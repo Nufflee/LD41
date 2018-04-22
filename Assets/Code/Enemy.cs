@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
   public float damage;
   public int level;
   public Color32 color;
+  private GameObject ammoPickupablePrefab;
 
   // Use this for initialization
   private void Start()
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour
     GetComponent<Renderer>().material.color = color;
     healthBar = transform.GetChild(0);
     transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = "" + (level + 1);
+    ammoPickupablePrefab = Resources.Load<GameObject>("Prefabs/PU_Ammo");
     agent = GetComponent<NavMeshAgent>();
   }
 
@@ -111,6 +113,8 @@ public class Enemy : MonoBehaviour
 
     if (health <= 0)
     {
+      GameObject pickupable = Instantiate(ammoPickupablePrefab, transform.position, transform.rotation);
+      AIGlobals.Instance.pickupables.Add(pickupable);
       Destroy(gameObject);
     }
 
@@ -120,6 +124,5 @@ public class Enemy : MonoBehaviour
   private void OnDestroy()
   {
     PlayerGlobals.Instance.enemies.Remove(gameObject);
-    AIGlobals.Instance.enemies.Remove(gameObject);
   }
 }

@@ -10,6 +10,7 @@ TagManager:
   - AIPlayer
   - Wall
   - Glass
+  - Pickupable
   layers:
   - Default
   - TransparentFX
