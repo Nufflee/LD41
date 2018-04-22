@@ -8,10 +8,12 @@ public class WaveManager : MonoBehaviour
 {
   private Text waveText;
   private GameObject crosshair;
-  private GameObject enemy;
+  public GameObject enemy;
   private int waveNumber = 1;
   private bool waveInProgress;
   private bool waveJustEnded;
+
+  private Wave wave;
 
   private void Start()
   {
@@ -20,39 +22,87 @@ public class WaveManager : MonoBehaviour
     enemy = Resources.Load<GameObject>("Prefabs/Enemy");
   }
 
+  private void GenerateWave()
+  {
+    int minEnemies = waveNumber, maxEnemies = waveNumber + waveNumber / 2;
+    int enemiesCount = (int) Random.Range(minEnemies, maxEnemies);
+    List<WaveEnemy> enemies = new List<WaveEnemy>();
+    for (int i = 0; i < enemiesCount; i++)
+    {
+      WaveEnemy enemyType = new WaveEnemy();
+      enemyType.health = 100f + (waveNumber > 10 ? waveNumber * 0.75f : waveNumber * 0.35f);
+      enemyType.damage = 0.023f + (waveNumber > 5 ? waveNumber * 0.045f : waveNumber * 0.01f);
+      enemyType.color = new Color(waveNumber * .35f, waveNumber * .75f, waveNumber * .4f);
+      enemyType.level = waveNumber;
+      enemies.Add(enemyType);
+    }
+
+    wave = gameObject.AddComponent<Wave>();
+    wave.enemies = enemies.ToArray();
+    wave.waveManager = this;
+  }
+
   private void Update()
   {
-    if ((Exchange.instance.arePlacesSwitched ? AIGlobals.Instance.enemies : PlayerGlobals.Instance.enemies).Count == 0 && waveJustEnded && waveInProgress == false)
+    if (waveInProgress == false && waveNumber > 1 && waveJustEnded)
     {
-      waveJustEnded = false;
-
       crosshair.SetActive(false);
-
+      waveJustEnded = false;
       waveText.enabled = true;
       waveText.text = "WAVE ENDED";
-
       StartCoroutine(WaveEndText());
     }
 
-    if ((Exchange.instance.arePlacesSwitched ? AIGlobals.Instance.enemies : PlayerGlobals.Instance.enemies).Count == 0 && waveNumber > 1)
+    if ((Exchange.instance.arePlacesSwitched ? AIGlobals.Instance.enemies : PlayerGlobals.Instance.enemies).Count == 0 && waveInProgress)
     {
       waveInProgress = false;
+      waveJustEnded = true;
     }
 
     if (Input.GetKeyDown(KeyCode.F) && waveInProgress == false && waveText.enabled == false)
     {
+      GenerateWave();
       crosshair.SetActive(false);
 
       waveText.enabled = true;
       waveText.text = "WAVE " + waveNumber;
 
       waveInProgress = true;
-
       StartCoroutine(SpawnWave());
+      waveNumber++;
     }
   }
 
-  private IEnumerator SpawnWave()
+  public IEnumerator SpawnWave()
+  {
+    wave.SpawnNextEnemy();
+    waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
+    while (waveText.color.a < 1.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a + 0.03f);
+
+      yield return null;
+    }
+
+    yield return new WaitForSeconds(1.0f);
+
+    while (waveText.color.a > 0.0f)
+    {
+      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a - 0.03f);
+
+      yield return null;
+    }
+
+    waveText.enabled = false;
+    crosshair.SetActive(true);
+
+    while (wave.SpawnNextEnemy())
+    {
+      yield return new WaitForSeconds(1f);
+    }
+  }
+
+  public IEnumerator WaveEndText()
   {
     waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
 
@@ -74,59 +124,5 @@ public class WaveManager : MonoBehaviour
 
     waveText.enabled = false;
     crosshair.SetActive(true);
-
-    float multiplier = waveNumber / 15.0f + 1;
-    int enemyCount = (int) Random.Range(3 * multiplier, 6 * multiplier);
-
-    for (int i = 0; i < enemyCount; i++)
-    {
-      SpawnEnemy();
-
-      yield return new WaitForSeconds(4.5f * multiplier / enemyCount);
-    }
-
-    waveNumber++;
-    waveJustEnded = true;
-  }
-
-  private IEnumerator WaveEndText()
-  {
-    waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
-
-    while (waveText.color.a < 1.0f)
-    {
-      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a + 0.03f);
-
-      yield return null;
-    }
-
-    yield return new WaitForSeconds(1.0f);
-
-    while (waveText.color.a > 0.0f)
-    {
-      waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, waveText.color.a - 0.03f);
-
-      yield return null;
-    }
-
-    waveText.enabled = false;
-    crosshair.SetActive(true);
-  }
-
-  private void SpawnEnemy()
-  {
-    bool switched = FindObjectOfType<Exchange>().arePlacesSwitched;
-
-    // Player Room
-    GameObject playerRoomEnemy = Instantiate(enemy, new Vector3(0, 25, 0), Quaternion.identity);
-    playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
-
-    PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
-
-    // AI Room
-    GameObject aiRoomEnemy = Instantiate(enemy, new Vector3(20, 25, 0), Quaternion.identity);
-    aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
-
-    AIGlobals.Instance.enemies.Add(aiRoomEnemy);
   }
 }

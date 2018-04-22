@@ -13,7 +13,11 @@ public class Enemy : MonoBehaviour
   private float engageDistance = 5.0f;
   private bool engaged;
 
-  private float health = 100;
+  public float maxHealth;
+  private float health;
+  public float damage;
+  public int level;
+  public Color32 color;
 
   // Use this for initialization
   private void Start()
@@ -24,8 +28,10 @@ public class Enemy : MonoBehaviour
 
       return;
     }
-
+    health = maxHealth;
+    GetComponent<Renderer>().material.color = color;
     healthBar = transform.GetChild(0);
+    transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = ""+(level+1);
     agent = GetComponent<NavMeshAgent>();
   }
 
@@ -60,11 +66,11 @@ public class Enemy : MonoBehaviour
     {
       if (globals.Target.GetComponent<Player>() != null)
       {
-        globals.Target.GetComponent<Player>().Damage(0.06f);
+        globals.Target.GetComponent<Player>().Damage(damage);
       }
       else
       {
-        globals.Target.GetComponent<AIController>().Damage(0.06f);
+        globals.Target.GetComponent<AIController>().Damage(damage);
       }
 
 
@@ -108,7 +114,7 @@ public class Enemy : MonoBehaviour
       Destroy(gameObject);
     }
 
-    healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / 100f;
+    healthBar.GetChild(0).GetChild(0).GetComponent<Image>().fillAmount = health / maxHealth;
   }
 
   private void OnDestroy()
