@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour
     if (transform.position.y < 2.0f)
     {
       agent.enabled = true;
+      rigidbody.isKinematic = true;
     }
 
     if (agent.isOnNavMesh == false) return;

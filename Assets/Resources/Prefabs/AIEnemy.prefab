@@ -655,6 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 0}
+  isDead: 0
   maxHealth: 0
   damage: 0
   level: 0

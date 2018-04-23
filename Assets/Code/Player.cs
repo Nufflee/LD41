@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
 
 public class Player : MonoBehaviour
 {
-  public float health = 100;
+  public float health = 0;
 
   private RigidbodyFirstPersonController controller;
   private Gun gun;
@@ -13,6 +14,18 @@ public class Player : MonoBehaviour
   {
     controller = GetComponent<RigidbodyFirstPersonController>();
     gun = transform.GetChild(0).GetChild(0).GetComponent<Gun>();
+
+    StartCoroutine(Test());
+  }
+
+  private IEnumerator Test()
+  {
+    yield return new WaitForSeconds(2.0f);
+    GameObject gunGameObject = gun.gameObject;
+
+    gun.enabled = false;
+    controller.enabled = false;
+    gunGameObject.GetComponent<Rigidbody>().isKinematic = false;
   }
 
   // Update is called once per frame
@@ -46,7 +59,11 @@ public class Player : MonoBehaviour
 
     if (health <= 0)
     {
-      Destroy(gameObject);
+      GameObject gunGameObject = gun.gameObject;
+
+      gun.enabled = false;
+      controller.enabled = false;
+      gunGameObject.GetComponent<Rigidbody>().isKinematic = false;
       // TODO: Death
     }
 

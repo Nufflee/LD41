@@ -52,6 +52,11 @@ public class AIGun : MonoBehaviour
 
   public void Shoot()
   {
+    if (ammo == 0)
+    {
+      ammo = 30;
+    }
+
     if (magazineAmmo == 0 && isReloading == false)
     {
       StartCoroutine(Reload());
@@ -93,8 +98,7 @@ public class AIGun : MonoBehaviour
 
           Destroy(sparkGameObject, 1.5f);
 
-          // balance
-          hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
+          hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 22.0f));
         }
 
         if (hit.collider.CompareTag("Wall") || hit.collider.tag.Contains("Ground") || hit.collider.CompareTag("Glass"))
