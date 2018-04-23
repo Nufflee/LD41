@@ -87,6 +87,11 @@ public class Gun : MonoBehaviour
 
           // balance
           hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
+
+          if (hit.collider.transform.parent.GetComponent<Enemy>().isDead)
+          {
+            Score.instance.BlueScore(1);
+          }
         }
 
         if (hit.collider.CompareTag("Wall") || hit.collider.tag.Contains("Ground") || hit.collider.CompareTag("Glass"))
