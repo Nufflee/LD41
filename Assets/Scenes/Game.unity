@@ -1193,7 +1193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   shakeDuration: 10
-  shakeAmount: 0.01
+  shakeAmount: 0.05
   decreaseFactor: 1
   dead: 0
 --- !u!136 &730489288
