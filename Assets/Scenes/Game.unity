@@ -2007,6 +2007,26 @@ Prefab:
       propertyPath: m_Animations.Array.data[2]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4772106205758916, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4772106205758916, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4772106205758916, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4772106205758916, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4772106205758916, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
   m_IsPrefabParent: 0
