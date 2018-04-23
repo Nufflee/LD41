@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     float distance = Vector3.Distance(agent.transform.position, globals.Target.transform.position);
 
-    if (distance < 2.0f)
+    if (distance < 2.5f)
     {
       if (globals.Target.GetComponent<Player>() != null)
       {

@@ -4,67 +4,71 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class LeaderboardController : MonoBehaviour {
+public class LeaderboardController : MonoBehaviour
+{
+  private InputField usernameField;
 
-	private InputField usernameField;
+  private Text LeaderboardDataSendError;
 
-	private Text LeaderboardDataSendError;
+  private GameObject leaderboardScorePanel;
 
-	private GameObject leaderboardScorePanel;
+  public static LeaderboardController instance;
 
-	public static LeaderboardController instance;
+  void Start()
+  {
+    usernameField = GameObject.Find("UsernameField").GetComponent<InputField>();
+    LeaderboardDataSendError = GameObject.Find("LeaderboardDataSendError").GetComponent<Text>();
+    leaderboardScorePanel = GameObject.Find("SendLeaderboardScorePanel");
+    leaderboardScorePanel.SetActive(false);
+    instance = this;
+  }
 
-	void Start () {
-		usernameField = GameObject.Find("UsernameField").GetComponent<InputField>();
-        LeaderboardDataSendError = GameObject.Find("LeaderboardDataSendError").GetComponent<Text>();
-		leaderboardScorePanel = GameObject.Find("SendLeaderboardScorePanel");
-        leaderboardScorePanel.SetActive(false);
-		instance = this;
-	}
-	
-	// Update is called once per frame
-	public void ShowPanel () {
-        leaderboardScorePanel.SetActive(true);
-	}
+  // Update is called once per frame
+  public void ShowPanel()
+  {
+    leaderboardScorePanel.SetActive(true);
+  }
 
-	public void SendButton() {
-		string username = usernameField.text;
-		if(username == "") {
-			ShowErrorMessage("Username field is empty!");
-			return;
-		}
-		float score = 20; // Temporary score
-		StartCoroutine(SendData(username, score));
-	}
-
-	public void CancelButton() {
-        leaderboardScorePanel.SetActive(false);
-	}
-
-    IEnumerator SendData(string username, float score)
+  public void SendButton()
+  {
+    string username = usernameField.text;
+    if (username == "")
     {
-        WWWForm form = new WWWForm();
-        form.AddField("username", username);
-		form.AddField("score", ""+score);
-
-        using (UnityWebRequest www = UnityWebRequest.Post("http://nufflee.com/ld41/scores", form))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                ShowErrorMessage(www.error);
-            }
-            else
-            {
-                leaderboardScorePanel.SetActive(false);
-            }
-        }
+      ShowErrorMessage("Username field is empty!");
+      return;
     }
 
-	
+    StartCoroutine(SendData(username, Score.instance.blueScore));
+  }
 
-	void ShowErrorMessage(string message) {
-		LeaderboardDataSendError.text = "Error: "+message;
-	}
+  public void CancelButton()
+  {
+    leaderboardScorePanel.SetActive(false);
+  }
+
+  IEnumerator SendData(string username, float score)
+  {
+    WWWForm form = new WWWForm();
+    form.AddField("username", username);
+    form.AddField("score", "" + score);
+
+    using (UnityWebRequest www = UnityWebRequest.Post("http://nufflee.com/ld41/scores", form))
+    {
+      yield return www.SendWebRequest();
+
+      if (www.isNetworkError || www.isHttpError)
+      {
+        ShowErrorMessage(www.error);
+      }
+      else
+      {
+        leaderboardScorePanel.SetActive(false);
+      }
+    }
+  }
+
+  void ShowErrorMessage(string message)
+  {
+    LeaderboardDataSendError.text = "Error: " + message;
+  }
 }
