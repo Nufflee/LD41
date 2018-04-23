@@ -38,7 +38,7 @@ public class LeaderboardController : MonoBehaviour
       return;
     }
 
-    StartCoroutine(SendData(username, Score.instance.blueScore));
+    StartCoroutine(SendData(username, Score.instance.playerScore));
   }
 
   public void CancelButton()
