@@ -1,0 +1,5 @@
+TheChoconut: 20
+Fool: 7
+Nufflee: 20
+Nufflee2: 205
+Nufflee3: 90000
