@@ -17,10 +17,14 @@ public class MainMenu : MonoBehaviour
     target.GetComponent<MMAIController>().enabled = false;
     target.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
     target.GetComponent<Rigidbody>().isKinematic = true;
+    Destroy(target);
     Camera.main.gameObject.GetComponent<Animator>().enabled = false;
     startPlayingTheGame = true;
     defaultCameraLocation = GameObject.Find("DefaultCameraLocation").transform;
-    target.transform.position = defaultCameraLocation.position;
+    target = Instantiate(Resources.Load<GameObject>("MainMenuPrefabs/MainMenuAI"), defaultCameraLocation.transform.position, new Quaternion(0f, 180f, 0f, 0f));
+    target.GetComponent<MMAIController>().enabled = false;
+    target.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+    target.GetComponent<Rigidbody>().isKinematic = true;
     GetComponent<Canvas>().enabled = false;
     Destroy(GameObject.FindWithTag("AIPlayer"), 1.5f);
     foreach (GameObject enemy in waveManager.enemies)
@@ -42,12 +46,12 @@ public class MainMenu : MonoBehaviour
     if (startPlayingTheGame && Camera.main.transform.localPosition != defaultCameraLocation.position && Camera.main.transform.localRotation.eulerAngles != new Vector3(0f, 180f, 0f))
     {
       Camera.main.transform.localPosition = Vector3.MoveTowards(Camera.main.transform.localPosition, defaultCameraLocation.position, 18f * Time.deltaTime);
-      Camera.main.transform.localRotation = Quaternion.Lerp(Camera.main.transform.localRotation, new Quaternion(0f, 180f, 0f, 0f), 0.02f * Time.deltaTime);
+      Camera.main.transform.localRotation = Quaternion.SlerpUnclamped(Camera.main.transform.localRotation, new Quaternion(0f, 180f, 0f, 0f), 0.02f * Time.deltaTime);
     }
     else if (startPlayingTheGame)
     {
-      Camera.main.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-      UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+      if(Camera.main.transform.localRotation.eulerAngles != new Vector3(0f, 180f, 0f)) Camera.main.transform.localRotation = Quaternion.SlerpUnclamped(Camera.main.transform.localRotation, new Quaternion(0f, 180f, 0f, 0f), 2f * Time.deltaTime);
+      else UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
   }
 }

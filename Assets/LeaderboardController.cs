@@ -23,7 +23,7 @@ public class LeaderboardController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void ShowPanel () {
+	public void ShowPanel () {
         leaderboardScorePanel.SetActive(true);
 	}
 

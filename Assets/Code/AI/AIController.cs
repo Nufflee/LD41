@@ -170,10 +170,6 @@ public class AIController : MonoBehaviour
   {
     health -= damage;
 
-/*    print("child " + GameObject.Find("AIHealthBar").transform.GetChild(0));
-    print(GameObject.Find("AIHealthBar").transform.GetChild(0).gameObject.GetComponent<Image>());
-    GameObject.Find("AIHealthBar").transform.GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);*/
-
     if (health <= 0)
     {
       Destroy(gameObject);
