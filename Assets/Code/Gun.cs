@@ -67,6 +67,8 @@ public class Gun : MonoBehaviour
 
       muzzleFlash.Play();
 
+      Statistics.instance.player.ammoSpent++;
+
       RaycastHit hit;
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
@@ -86,11 +88,15 @@ public class Gun : MonoBehaviour
           Destroy(sparkGameObject, 1.5f);
 
           // balance
-          hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f));
+          float damage = Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 25.0f);
+          hit.collider.transform.parent.GetComponent<Enemy>().Damage(damage);
 
+          Statistics.instance.player.damageDealt += (int) damage;
+          
           if (hit.collider.transform.parent.GetComponent<Enemy>().isDead)
           {
             Score.instance.BlueScore(1);
+            Statistics.instance.player.enemiesKilled++;
           }
         }
 

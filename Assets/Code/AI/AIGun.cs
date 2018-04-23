@@ -80,6 +80,8 @@ public class AIGun : MonoBehaviour
 
       muzzleFlash.Play();
 
+      Statistics.instance.ai.ammoSpent++;
+
       RaycastHit hit;
 
       magazineAmmoText.text = (--magazineAmmo).ToString();
@@ -98,11 +100,15 @@ public class AIGun : MonoBehaviour
 
           Destroy(sparkGameObject, 1.5f);
 
-          hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 22.0f));
-          
+          float damage = Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 22.0f);
+          hit.collider.transform.parent.GetComponent<Enemy>().Damage(damage);
+
+          Statistics.instance.ai.damageDealt += (int) damage;
+
           if (hit.collider.transform.parent.GetComponent<Enemy>().isDead)
           {
             Score.instance.OrangeScore(1);
+            Statistics.instance.ai.enemiesKilled++;
           }
         }
 

@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class AIController : MonoBehaviour
 {
@@ -11,6 +14,7 @@ public class AIController : MonoBehaviour
   [SerializeField] public float health = 100f;
   [SerializeField] private float healthRegen = 0.003f;
   private bool preparingForWave;
+  private DateTime spawnTime;
 
   private AIGun aiGun;
 
@@ -21,6 +25,7 @@ public class AIController : MonoBehaviour
 
     agent.updateRotation = false;
     agent.updatePosition = true;
+    spawnTime = DateTime.Now;
     AIGlobals.Instance.WaveManager.SpawnAIWave();
   }
 
@@ -172,13 +177,35 @@ public class AIController : MonoBehaviour
 
     if (health <= 0)
     {
+      Statistics.instance.ai.waveNumber = AIGlobals.Instance.WaveManager.aiWaveNumber;
+
       Destroy(gameObject);
-      // TODO: Death
     }
 
     if (health > 100)
     {
       health = 100;
     }
+
+    if (damage > 0)
+    {
+      Statistics.instance.ai.healthSpent += (int) damage;
+    }
+  }
+
+  private void OnDestroy()
+  {
+    TimeSpan deathTime = DateTime.Now - spawnTime;
+
+    if (deathTime.Minutes == 0)
+    {
+      Statistics.instance.player.timeAlive = deathTime.Seconds + " sec";
+    }
+    else
+    {
+      Statistics.instance.player.timeAlive = deathTime.Minutes + " min " + deathTime.Seconds + " sec";
+    }
+
+    Statistics.instance.ai.score = Score.instance.aiScore;
   }
 }

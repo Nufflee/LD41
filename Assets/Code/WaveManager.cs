@@ -11,8 +11,8 @@ public class WaveManager : MonoBehaviour
   private GameObject crosshair;
   public GameObject enemy;
   public GameObject aiEnemy;
-  private int waveNumber = 1;
-  private int aiWaveNumber = 1;
+  public int waveNumber = 1;
+  public int aiWaveNumber = 1;
   private bool waveInProgress;
   public bool aiWaveInProgress;
   private bool waveJustEnded;

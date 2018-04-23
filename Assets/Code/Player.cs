@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
@@ -20,14 +21,13 @@ public class Player : MonoBehaviour
   public bool dead = false;
 
   private Vector3 originalPos;
-  private GameObject statisticsPanel;
+  private DateTime spawnTime;
 
   private void Start()
   {
     controller = GetComponent<RigidbodyFirstPersonController>();
     gun = transform.GetChild(0).GetChild(0).GetComponent<Gun>();
-    statisticsPanel = GameObject.Find("StatisticsPanel");
-    statisticsPanel.SetActive(false);
+    spawnTime = DateTime.Now;
   }
 
   // Update is called once per frame
@@ -61,12 +61,31 @@ public class Player : MonoBehaviour
 
     if (health <= 0 && dead == false)
     {
+      TimeSpan deathTime = DateTime.Now - spawnTime;
+      
+      if (deathTime.Minutes == 0)
+      {
+        Statistics.instance.player.timeAlive = deathTime.Seconds + " sec";
+      }
+      else
+      {
+        Statistics.instance.player.timeAlive = deathTime.Minutes + " min " + deathTime.Seconds + " sec";
+      }
+
+      Statistics.instance.player.waveNumber = AIGlobals.Instance.WaveManager.waveNumber;
+      Statistics.instance.player.score = Score.instance.playerScore;
+
       StartCoroutine(Die());
     }
 
     if (health > 100)
     {
       health = 100;
+    }
+
+    if (damage > 0)
+    {
+      Statistics.instance.player.healthSpent += (int) damage;
     }
   }
 
@@ -96,10 +115,12 @@ public class Player : MonoBehaviour
     Camera.main.GetComponent<Rigidbody>().isKinematic = false;
     Camera.main.GetComponent<Collider>().enabled = true;
     Camera.main.GetComponent<Rigidbody>().AddForce(transform.right * 10);
+    GameObject.Find("ScoreBackground").SetActive(false);
+    Destroy(AIGlobals.Instance.Target);
 
     yield return new WaitForSeconds(2.5f);
 
-    statisticsPanel.SetActive(true);
+    Statistics.instance.Show();
     LeaderboardController.instance.ShowPanel();
   }
 }

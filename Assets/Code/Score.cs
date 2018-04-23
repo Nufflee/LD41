@@ -7,7 +7,8 @@ public class Score : MonoBehaviour
   private Text blueText;
 
   public static Score instance;
-  public int blueScore;
+  public int playerScore;
+  public int aiScore;
 
   private void Awake()
   {
@@ -23,11 +24,12 @@ public class Score : MonoBehaviour
   public void OrangeScore(int count)
   {
     orangeText.text = (int.Parse(orangeText.text) + count).ToString();
+    aiScore = int.Parse(orangeText.text);
   }
 
   public void BlueScore(int count)
   {
     blueText.text = (int.Parse(blueText.text) + count).ToString();
-    blueScore = int.Parse(blueText.text);
+    playerScore = int.Parse(blueText.text);
   }
 }
