@@ -102,5 +102,6 @@ public class Player : MonoBehaviour
     yield return new WaitForSeconds(2.5f);
 
     statisticsPanel.SetActive(true);
+    LeaderboardController.instance.ShowPanel();
   }
 }
