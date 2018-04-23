@@ -98,8 +98,9 @@ public class AIController : MonoBehaviour
       // Start shooting.
       aiGun.Shoot();
     }
-    else if (agent.velocity.magnitude <= 0.001f)
+    else if (agent.velocity.magnitude <= 0.001f || agent.isOnNavMesh == false)
     {
+      agent.isStopped = false;
       agent.SetDestination(target.position);
     }
   }
