@@ -59,8 +59,6 @@ public class Player : MonoBehaviour
     // Update health bar.
     GameObject.Find("PlayerHealthBar").transform.GetChild(0).GetComponent<Image>().fillAmount = (health / 100f);
 
-    print(health);
-
     if (health <= 0 && dead == false)
     {
       StartCoroutine(Die());
