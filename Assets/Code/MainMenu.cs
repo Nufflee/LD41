@@ -32,6 +32,11 @@ public class MainMenu : MonoBehaviour
     waveManager.StopAllCoroutines();
   }
 
+  public void ExitBtn()
+  {
+    Application.Quit();
+  }
+
   void Update()
   {
     if (startPlayingTheGame && Camera.main.transform.localPosition != defaultCameraLocation.position && Camera.main.transform.localRotation.eulerAngles != new Vector3(0f, 180f, 0f))
