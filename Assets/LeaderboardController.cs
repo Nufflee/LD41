@@ -32,7 +32,8 @@ public class LeaderboardController : MonoBehaviour
   public void SendButton()
   {
     string username = usernameField.text;
-    if (username == "")
+
+    if (string.IsNullOrEmpty(username.Trim()))
     {
       ShowErrorMessage("Username field is empty!");
       return;
