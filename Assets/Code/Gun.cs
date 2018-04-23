@@ -23,6 +23,7 @@ public class Gun : MonoBehaviour
   private GameObject shellPrefab;
   private Transform shellSpawn;
   public AudioClip pickUp;
+  private bool meleeAtacking;
 
   private void Start()
   {
@@ -124,6 +125,11 @@ public class Gun : MonoBehaviour
       StartCoroutine(Reload());
     }
 
+    if (Input.GetKeyDown(KeyCode.V) && meleeAtacking == false)
+    {
+      StartCoroutine(MeleeAttack());
+    }
+
     if (transform.localRotation.eulerAngles.z > 0.0f && transform.localRotation.eulerAngles.z < 20.0f)
     {
       transform.Rotate(new Vector3(0, 0, 1), -0.08f);
@@ -143,19 +149,48 @@ public class Gun : MonoBehaviour
     }
   }
 
+  private IEnumerator MeleeAttack()
+  {
+    transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
+
+    meleeAtacking = true;
+
+    animation.Play("GunMeleeAttack");
+
+    yield return new WaitForSeconds(animation.GetClip("GunMeleeAttack").length);
+
+    GameObject player = transform.parent.parent.gameObject;
+
+    RaycastHit hit;
+
+    if (Physics.Raycast(player.transform.position, player.transform.forward, out hit, 1.5f))
+    {
+      if (hit.collider.CompareTag("Enemy"))
+      {
+        GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
+
+        Destroy(sparkGameObject, 1.5f);
+
+        hit.collider.transform.parent.GetComponent<Enemy>().Damage(15.0f);
+      }
+    }
+
+    meleeAtacking = false;
+  }
+
   private IEnumerator Reload()
   {
     transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, 0.0f);
 
     isReloading = true;
 
-    animation.Play();
+    animation.Play("ReloadAnimation");
 
     yield return new WaitForSeconds(0.4f);
 
     audioSource.PlayOneShot(reloadClip);
 
-    yield return new WaitForSeconds(animation.clip.length - 0.9f);
+    yield return new WaitForSeconds(animation.GetClip("ReloadAnimation").length - 0.9f);
 
     // What if there's not enough ammo in ammo?
     if (ammo < 30 - magazineAmmo)

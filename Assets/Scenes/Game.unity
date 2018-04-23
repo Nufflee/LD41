@@ -1917,18 +1917,18 @@ Prefab:
         type: 2}
       propertyPath: m_Animations.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7400000, guid: 5b5701f41ddd8d345b3608b5b344487c, type: 2}
     - target: {fileID: 4499556077379578, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 60.44
+      value: 58.731003
       objectReference: {fileID: 0}
     - target: {fileID: 4499556077379578, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -18.114
       objectReference: {fileID: 0}
     - target: {fileID: 4499556077379578, guid: b9a0772b6a088c9409dd5c69c1fa8f32, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 177.8
+      value: 131.095
       objectReference: {fileID: 0}
     - target: {fileID: 111297907800684420, guid: b9a0772b6a088c9409dd5c69c1fa8f32,
         type: 2}
@@ -1943,12 +1943,12 @@ Prefab:
     - target: {fileID: 114437418279511442, guid: b9a0772b6a088c9409dd5c69c1fa8f32,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 111297907800684420, guid: b9a0772b6a088c9409dd5c69c1fa8f32,
         type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 111297907800684420, guid: b9a0772b6a088c9409dd5c69c1fa8f32,
         type: 2}
