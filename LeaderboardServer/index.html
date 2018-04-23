@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <title>LD41 - Leaderboard</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+    </head>
+  <body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">LD41 - Leaderboard</h1>
+            <p class="lead">On this page you can see the leaderboard of a game called "LD41".</p>
+            <hr class="my-4">
+            <p>You can see more information about the game by clicking on learn more.</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="https://ldjam.com/" target="_blank" role="button">Learn more</a>
+            </p>
+        </div>
+        <div id="app"></div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <script>
+    function getData() {
+        $.get("https://gist.githubusercontent.com/TheChoconut/167301ebd4839442e302dbf2ad344038/raw/3cd137275bfb763dc1dd7d83474645e9390c5b1d/scores", (data) => {
+            appData = "<table id='table'><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody>{table_data}</tbody></table>";
+            dataArray = data.split("/n");
+            tableData = "";
+            dataArray.forEach(element => {
+                var userData = element.split(": ");
+                tableData += "<tr><td>"+userData[0]+"</td><td>"+userData[1]+"</td></tr>";
+            });
+            appData = appData.replace("{table_data}", tableData);
+            $("#app").html(appData);
+            $('#table').DataTable();
+        });
+    }
+    setInterval(getData, 30000);
+    getData();
+    </script>
+</body>
+</html>
