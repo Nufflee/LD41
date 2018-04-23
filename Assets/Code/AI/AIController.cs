@@ -7,7 +7,7 @@ public class AIController : MonoBehaviour
 {
   public NavMeshAgent agent { get; private set; }
   private Transform target;
-  [SerializeField] private float health = 100f;
+  [SerializeField] public float health = 100f;
   [SerializeField] private float healthRegen = 0.003f;
 
   private AIGun aiGun;

@@ -10,10 +10,10 @@ public class AIGun : MonoBehaviour
   private ParticleSystem muzzleFlash;
   private GameObject sparkEffect;
   private Animation animation;
-  private AudioSource audioSource;
+  public AudioSource audioSource;
   public bool isReloading;
   private int magazineAmmo = 30;
-  private int ammo = 90;
+  public int ammo = 90;
   private Text magazineAmmoText;
   private Text ammoText;
   private AudioClip gunShotClip;
@@ -22,6 +22,8 @@ public class AIGun : MonoBehaviour
   private Camera AICamera;
   private GameObject shellPrefab;
   private Transform shellSpawn;
+  public AudioClip pickUp;
+  private GameObject glassBulletHolePrefab;
 
   private void Start()
   {
@@ -36,8 +38,10 @@ public class AIGun : MonoBehaviour
     audioSource = GetComponent<AudioSource>();
     gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
     reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
+    pickUp = Resources.Load<AudioClip>("Sounds/PickUp");
     shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
     shellSpawn = transform.Find("ShellSpawn");
+    glassBulletHolePrefab = Resources.Load<GameObject>("Prefabs/GlassBulletHole");
   }
 
   public void AddAmmo(int amount)
@@ -79,23 +83,37 @@ public class AIGun : MonoBehaviour
 
       GameObject shell = Instantiate(shellPrefab, shellSpawn.position, shellSpawn.rotation);
       shell.GetComponent<Rigidbody>().AddForce(transform.right * 120f);
-      Destroy(shell, 30f);
+      Destroy(shell, 20.0f);
 
       if (Physics.Raycast(recoilRotation * AICamera.ViewportToWorldPoint(new Vector3(0.2f, 0.2f, 0.0f)), AICamera.transform.forward, out hit))
       {
-        GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
-        Destroy(sparkGameObject, 1.5f);
-
         if (hit.collider.CompareTag("Enemy"))
         {
+          GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
+
+          Destroy(sparkGameObject, 1.5f);
+
           // balance
           hit.collider.transform.parent.GetComponent<Enemy>().Damage(Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 15.0f));
         }
 
-        if (hit.collider.CompareTag("Wall"))
+        if (hit.collider.CompareTag("Wall") || hit.collider.tag.Contains("Ground") || hit.collider.CompareTag("Glass"))
         {
-          GameObject bulletHole = Instantiate(bulletHolePrefab, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
-          Destroy(bulletHole, Random.Range(80f, 100f));
+          Vector3 offset = new Vector3(hit.normal.x == 0.0f ? 1 : hit.normal.x, hit.normal.y == 0.0f ? 1 : hit.normal.y, hit.normal.z == 0.0f ? 1 : hit.normal.z);
+
+          if (hit.collider.CompareTag("Glass"))
+          {
+            GameObject glassBulletHole = Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(glassBulletHole, 50.0f);
+          }
+          else
+          {
+            GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
+            Destroy(bulletHole, 50.0f);
+
+            GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-AICamera.transform.forward));
+            Destroy(sparkGameObject, 1.5f);
+          }
         }
       }
     }

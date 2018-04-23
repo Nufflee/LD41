@@ -28,6 +28,7 @@ public class Wave : MonoBehaviour
     ColorUtility.TryParseHtmlString("#005aff", out color);
     playerRoomEnemy.GetComponent<Renderer>().material.color = color;*/
     PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
+    waveManager.enemies.Add(playerRoomEnemy);
 
     // AI Room
     GameObject aiRoomEnemy = Instantiate(waveManager.aiEnemy, new Vector3(20, 25, 0), Quaternion.identity);
@@ -37,6 +38,7 @@ public class Wave : MonoBehaviour
 /*    ColorUtility.TryParseHtmlString("#ff5a00", out color);
     playerRoomEnemy.GetComponent<Renderer>().material.color = color;*/
     AIGlobals.Instance.enemies.Add(aiRoomEnemy);
+    waveManager.enemies.Add(aiRoomEnemy);
   }
 
   public bool SpawnNextEnemy()

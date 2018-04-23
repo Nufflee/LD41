@@ -4,7 +4,7 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class Player : MonoBehaviour
 {
-  private float health = 100;
+  public float health = 100;
 
   private RigidbodyFirstPersonController controller;
   private Gun gun;

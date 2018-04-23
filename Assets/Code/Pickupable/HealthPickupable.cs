@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class AmmoPickupable : MonoBehaviour
+public class HealthPickupable : MonoBehaviour
 {
-  private void Update()
+  void Update()
   {
     transform.position += new Vector3(0, Mathf.Sin(Time.time * 3.5f) / 145.0f, 0);
     transform.Rotate(new Vector3(0, 1, 0), 0.8f);
@@ -12,10 +12,9 @@ public class AmmoPickupable : MonoBehaviour
 
     if (playerDistance < 2f)
     {
-      if (PlayerGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<Gun>().ammo < 270)
+      if (PlayerGlobals.Instance.Target.GetComponent<Player>().health < 100)
       {
-        // Add Ammo to the player.
-        PlayerGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<Gun>().AddAmmo(Random.Range(10, 30));
+        PlayerGlobals.Instance.Target.GetComponent<Player>().Damage(-Random.Range(5, 15));
         PlayerGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<Gun>().audioSource.PlayOneShot(PlayerGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<Gun>().pickUp);
 
         AIGlobals.Instance.pickupables.Remove(gameObject);
@@ -24,11 +23,11 @@ public class AmmoPickupable : MonoBehaviour
     }
     else if (aiDistance < 3f)
     {
-      if (AIGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<AIGun>().ammo < 270)
+      if (AIGlobals.Instance.Target.GetComponent<AIController>().health < 100)
       {
-        AIGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<AIGun>().AddAmmo(Random.Range(10, 30));
+        AIGlobals.Instance.Target.GetComponent<AIController>().Damage(-Random.Range(5, 15));
         AIGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<AIGun>().audioSource.PlayOneShot(AIGlobals.Instance.Target.transform.GetChild(0).GetChild(0).GetComponent<AIGun>().pickUp);
-        
+
         AIGlobals.Instance.pickupables.Remove(gameObject);
         Destroy(gameObject);
       }

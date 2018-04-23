@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
   public float damage;
   public int level;
   private GameObject ammoPickupablePrefab;
+  private GameObject healthPickupablePrefab;
 
   // Use this for initialization
   private void Start()
@@ -34,7 +35,8 @@ public class Enemy : MonoBehaviour
     health = maxHealth;
     healthBar = transform.GetChild(0);
     transform.GetChild(0).Find("LevelText").GetComponent<Text>().text = "" + (level + 1);
-    ammoPickupablePrefab = Resources.Load<GameObject>("Prefabs/PU_Ammo");
+    ammoPickupablePrefab = Resources.Load<GameObject>("Prefabs/AmmoPickupable");
+    healthPickupablePrefab = Resources.Load<GameObject>("Prefabs/HealthPickupable");
     agent = GetComponent<NavMeshAgent>();
     rigidbody = GetComponent<Rigidbody>();
   }
@@ -121,11 +123,22 @@ public class Enemy : MonoBehaviour
 
       if (Random.Range(0, 2) == 0)
       {
-        GameObject pickupable = Instantiate(ammoPickupablePrefab, new Vector3(transform.position.x + 1.5f, transform.position.y, transform.position.z), transform.rotation);
+        if (Random.Range(0, 2) == 0)
+        {
+          GameObject pickupable = Instantiate(ammoPickupablePrefab, new Vector3(transform.position.x + 1.5f, 0.8f, transform.position.z), transform.rotation);
 
-        AIGlobals.Instance.pickupables.Add(pickupable);
+          AIGlobals.Instance.pickupables.Add(pickupable);
 
-        Destroy(pickupable, 20.0f);
+          Destroy(pickupable, 20.0f);
+        }
+        else
+        {
+          GameObject pickupable = Instantiate(healthPickupablePrefab, new Vector3(transform.position.x + 1.5f, 0.8f, transform.position.z), transform.rotation);
+
+          AIGlobals.Instance.pickupables.Add(pickupable);
+
+          Destroy(pickupable, 20.0f);
+        }
       }
 
       Destroy(gameObject, 15.0f);
@@ -136,7 +149,6 @@ public class Enemy : MonoBehaviour
 
   private void OnDestroy()
   {
-    PlayerGlobals.Instance.enemies.Remove(gameObject);
-    AIGlobals.Instance.enemies.Remove(gameObject);
+    globals.WaveManager.enemies.Remove(gameObject);
   }
 }

@@ -13,16 +13,17 @@ public class Gun : MonoBehaviour
   private GameObject bulletHolePrefab;
   private GameObject glassBulletHolePrefab;
   private int magazineAmmo = 30;
-  private int ammo = 90;
+  public int ammo = 90;
   private Text magazineAmmoText;
   private Text ammoText;
   private Animation animation;
-  private AudioSource audioSource;
+  public AudioSource audioSource;
   public bool isReloading;
   private AudioClip gunShotClip;
   private AudioClip reloadClip;
   private GameObject shellPrefab;
   private Transform shellSpawn;
+  public AudioClip pickUp;
 
   private void Start()
   {
@@ -36,6 +37,7 @@ public class Gun : MonoBehaviour
     animation = GetComponent<Animation>();
     audioSource = GetComponent<AudioSource>();
     gunShotClip = Resources.Load<AudioClip>("Sounds/GunFire");
+    pickUp = Resources.Load<AudioClip>("Sounds/PickUp");
     reloadClip = Resources.Load<AudioClip>("Sounds/GunReload");
     shellPrefab = Resources.Load<GameObject>("Prefabs/Shell");
     shellSpawn = transform.Find("ShellSpawn");
@@ -94,12 +96,12 @@ public class Gun : MonoBehaviour
           if (hit.collider.CompareTag("Glass"))
           {
             GameObject glassBulletHole = Instantiate(glassBulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
-            Destroy(glassBulletHole, Random.Range(80f, 100f));
+            Destroy(glassBulletHole, 50.0f);
           }
           else
           {
             GameObject bulletHole = Instantiate(bulletHolePrefab, new Vector3(hit.point.x + 0.01f * offset.x, hit.point.y + 0.01f * offset.y, hit.point.z + 0.01f * offset.z), Quaternion.LookRotation(hit.normal));
-            Destroy(bulletHole, Random.Range(80f, 100f));
+            Destroy(bulletHole, 50.0f);
 
             GameObject sparkGameObject = Instantiate(sparkEffect, hit.point, Quaternion.LookRotation(-Camera.main.transform.forward));
             Destroy(sparkGameObject, 1.5f);

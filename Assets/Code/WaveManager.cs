@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class WaveManager : MonoBehaviour
   private bool waveJustEnded;
 
   private Wave wave;
+  public List<GameObject> enemies;
 
   private void Start()
   {
@@ -22,6 +24,7 @@ public class WaveManager : MonoBehaviour
     crosshair = transform.Find("Crosshair").gameObject;
     enemy = Resources.Load<GameObject>("Prefabs/Enemy");
     aiEnemy = Resources.Load<GameObject>("Prefabs/AIEnemy");
+    enemies = new List<GameObject>();
   }
 
   private void GenerateWave()
@@ -70,6 +73,8 @@ public class WaveManager : MonoBehaviour
 
       waveText.enabled = true;
       waveText.text = "WAVE " + waveNumber;
+
+      enemies.ForEach(Destroy);
 
       waveInProgress = true;
       StartCoroutine(SpawnWave());
