@@ -10,13 +10,17 @@ public class Exchange : MonoBehaviour
 
   public static Exchange instance;
 
-  void Start()
+  private void Awake()
   {
     instance = this;
+  }
+
+  void Start()
+  {
     player = GameObject.FindWithTag("Player");
     aiPlayer = GameObject.FindWithTag("AIPlayer");
     arePlacesSwitched = false;
-    Invoke("SwitchPlaces", Random.Range(40, 70));
+    // Invoke("SwitchPlaces", Random.Range(40, 70));
   }
 
   void SwitchPlaces()

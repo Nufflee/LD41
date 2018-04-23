@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
@@ -9,6 +10,7 @@ public class AIController : MonoBehaviour
   private Transform target;
   [SerializeField] public float health = 100f;
   [SerializeField] private float healthRegen = 0.003f;
+  private bool preparingForWave;
 
   private AIGun aiGun;
 
@@ -19,6 +21,7 @@ public class AIController : MonoBehaviour
 
     agent.updateRotation = false;
     agent.updatePosition = true;
+    AIGlobals.Instance.WaveManager.SpawnAIWave();
   }
 
   private void Update()
@@ -28,10 +31,12 @@ public class AIController : MonoBehaviour
     {
       health += healthRegen;
     }
-  }
 
-  private void FixedUpdate()
-  {
+    if (AIGlobals.Instance.WaveManager.aiWaveInProgress == false && preparingForWave == false)
+    {
+      StartCoroutine(PrepareForWave());
+    }
+
     // If there is no target and agent is unable to move, allow him to move.
     if (target == null && agent.isStopped) agent.isStopped = false;
 
@@ -97,6 +102,17 @@ public class AIController : MonoBehaviour
     {
       agent.SetDestination(target.position);
     }
+  }
+
+  private IEnumerator PrepareForWave()
+  {
+    preparingForWave = true;
+
+    yield return new WaitForSeconds(Random.Range(3, 7));
+
+    AIGlobals.Instance.WaveManager.SpawnAIWave();
+
+    preparingForWave = false;
   }
 
   Transform GetClosestEnemy()

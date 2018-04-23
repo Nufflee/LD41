@@ -12,13 +12,15 @@ public class WaveManager : MonoBehaviour
   public GameObject enemy;
   public GameObject aiEnemy;
   private int waveNumber = 1;
+  private int aiWaveNumber = 1;
   private bool waveInProgress;
+  public bool aiWaveInProgress;
   private bool waveJustEnded;
 
   private Wave wave;
   public List<GameObject> enemies;
 
-  private void Start()
+  private void Awake()
   {
     waveText = transform.Find("WaveText").GetComponent<Text>();
     crosshair = transform.Find("Crosshair").gameObject;
@@ -27,7 +29,7 @@ public class WaveManager : MonoBehaviour
     enemies = new List<GameObject>();
   }
 
-  private void GenerateWave()
+  private void GenerateWave(int waveNumber)
   {
     int minEnemies = waveNumber, maxEnemies = waveNumber + waveNumber / 2;
     int enemiesCount = (int) Random.Range(minEnemies, maxEnemies);
@@ -39,7 +41,7 @@ public class WaveManager : MonoBehaviour
         health = 100f + (waveNumber > 10 ? waveNumber * 0.75f : waveNumber * 0.35f),
         damage = 0.023f + (waveNumber > 5 ? waveNumber * 0.045f : waveNumber * 0.01f),
         color = new Color(waveNumber * .35f, waveNumber * .75f, waveNumber * .4f),
-        level = waveNumber
+        level = Mathf.FloorToInt(waveNumber / 1.5f)
       };
       enemies.Add(enemyType);
     }
@@ -66,25 +68,53 @@ public class WaveManager : MonoBehaviour
       waveJustEnded = true;
     }
 
+    if ((Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance.enemies : AIGlobals.Instance.enemies).Count == 0 && aiWaveInProgress)
+    {
+      aiWaveInProgress = false;
+    }
+
     if (Input.GetKeyDown(KeyCode.F) && waveInProgress == false && waveText.enabled == false)
     {
-      GenerateWave();
+      GenerateWave(waveNumber);
       crosshair.SetActive(false);
 
       waveText.enabled = true;
       waveText.text = "WAVE " + waveNumber;
 
-      enemies.ForEach(Destroy);
+      enemies.ForEach(enemy =>
+      {
+        if (enemy.GetComponent<Enemy>().isDead && enemy.GetComponent<Enemy>().globals == (Exchange.instance.arePlacesSwitched ? AIGlobals.Instance : PlayerGlobals.Instance))
+        {
+          Destroy(enemy);
+        }
+      });
 
       waveInProgress = true;
-      StartCoroutine(SpawnWave());
+      StartCoroutine(SpawnPlayerWave());
       waveNumber++;
     }
   }
 
-  public IEnumerator SpawnWave()
+  public void SpawnAIWave()
   {
-    wave.SpawnNextEnemy();
+    aiWaveInProgress = true;
+
+    enemies.ForEach(enemy =>
+    {
+      if (enemy.GetComponent<Enemy>().isDead && enemy.GetComponent<Enemy>().globals == (Exchange.instance.arePlacesSwitched ? PlayerGlobals.Instance : AIGlobals.Instance))
+      {
+        Destroy(enemy);
+      }
+    });
+
+    GenerateWave(aiWaveNumber);
+    StartCoroutine(SpawnAIWaveCoroutine());
+    aiWaveNumber++;
+  }
+
+  private IEnumerator SpawnPlayerWave()
+  {
+    wave.SpawnNextPlayerEnemy();
     waveText.color = new Color(waveText.color.r, waveText.color.g, waveText.color.b, 0.0f);
     while (waveText.color.a < 1.0f)
     {
@@ -105,7 +135,19 @@ public class WaveManager : MonoBehaviour
     waveText.enabled = false;
     crosshair.SetActive(true);
 
-    while (wave.SpawnNextEnemy())
+    while (wave.SpawnNextPlayerEnemy())
+    {
+      yield return new WaitForSeconds(1f);
+    }
+  }
+
+  private IEnumerator SpawnAIWaveCoroutine()
+  {
+    wave.SpawnNextAIEnemy();
+
+    yield return new WaitForSeconds(1.0f);
+
+    while (wave.SpawnNextAIEnemy())
     {
       yield return new WaitForSeconds(1f);
     }

@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 
   private float engageDistance = 5.0f;
   private bool engaged;
-  private bool isDead;
+  public bool isDead;
 
   public float maxHealth;
   private float health;

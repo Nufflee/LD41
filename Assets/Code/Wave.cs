@@ -8,45 +8,86 @@ public class Wave : MonoBehaviour
 
   private Exchange exchange;
 
-  private int currentEnemyCounter = 0;
+  private int aiEnemyCounter = 0;
+  private int playerEnemyCounter = 0;
 
   void Awake()
   {
     exchange = Exchange.instance;
   }
 
-  private void SpawnEnemy(WaveEnemy enemy)
+  private void SpawnPlayerEnemy(WaveEnemy enemy)
   {
     bool switched = exchange.arePlacesSwitched;
 
-    // Player Room
-    GameObject playerRoomEnemy = Instantiate(waveManager.enemy, new Vector3(0, 25, 0), Quaternion.identity);
-    playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
-    playerRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
-    playerRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
-/*    Color color;
-    ColorUtility.TryParseHtmlString("#005aff", out color);
-    playerRoomEnemy.GetComponent<Renderer>().material.color = color;*/
-    PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
-    waveManager.enemies.Add(playerRoomEnemy);
-
-    // AI Room
-    GameObject aiRoomEnemy = Instantiate(waveManager.aiEnemy, new Vector3(20, 25, 0), Quaternion.identity);
-    aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
-    aiRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
-    aiRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
-/*    ColorUtility.TryParseHtmlString("#ff5a00", out color);
-    playerRoomEnemy.GetComponent<Renderer>().material.color = color;*/
-    AIGlobals.Instance.enemies.Add(aiRoomEnemy);
-    waveManager.enemies.Add(aiRoomEnemy);
+    if (switched == false)
+    {
+      // Player Room
+      GameObject playerRoomEnemy = Instantiate(waveManager.enemy, new Vector3(0, 25, 0), Quaternion.identity);
+      playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
+      playerRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
+      playerRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
+      playerRoomEnemy.GetComponent<Enemy>().level = enemy.level;
+      PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
+      waveManager.enemies.Add(playerRoomEnemy);
+    }
+    else
+    {
+      // AI Room
+      GameObject aiRoomEnemy = Instantiate(waveManager.aiEnemy, new Vector3(20, 25, 0), Quaternion.identity);
+      aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
+      aiRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
+      aiRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
+      aiRoomEnemy.GetComponent<Enemy>().level = enemy.level;
+      AIGlobals.Instance.enemies.Add(aiRoomEnemy);
+      waveManager.enemies.Add(aiRoomEnemy);
+    }
   }
 
-  public bool SpawnNextEnemy()
+  private void SpawnAIEnemy(WaveEnemy enemy)
   {
-    if (currentEnemyCounter >= enemies.Length) return false;
+    bool switched = exchange.arePlacesSwitched;
 
-    SpawnEnemy(enemies[currentEnemyCounter]);
-    currentEnemyCounter++;
+    if (switched)
+    {
+      // Player Room
+      GameObject playerRoomEnemy = Instantiate(waveManager.enemy, new Vector3(0, 25, 0), Quaternion.identity);
+      playerRoomEnemy.GetComponent<Enemy>().globals = switched ? AIGlobals.Instance : PlayerGlobals.Instance;
+      playerRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
+      playerRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
+      playerRoomEnemy.GetComponent<Enemy>().level = enemy.level;
+      PlayerGlobals.Instance.enemies.Add(playerRoomEnemy);
+      waveManager.enemies.Add(playerRoomEnemy);
+    }
+    else
+    {
+      // AI Room
+      GameObject aiRoomEnemy = Instantiate(waveManager.aiEnemy, new Vector3(20, 25, 0), Quaternion.identity);
+      aiRoomEnemy.GetComponent<Enemy>().globals = switched ? PlayerGlobals.Instance : AIGlobals.Instance;
+      aiRoomEnemy.GetComponent<Enemy>().maxHealth = enemy.health;
+      aiRoomEnemy.GetComponent<Enemy>().damage = enemy.damage;
+      aiRoomEnemy.GetComponent<Enemy>().level = enemy.level;
+      AIGlobals.Instance.enemies.Add(aiRoomEnemy);
+      waveManager.enemies.Add(aiRoomEnemy);
+    }
+  }
+
+  public bool SpawnNextPlayerEnemy()
+  {
+    if (playerEnemyCounter >= enemies.Length) return false;
+
+    SpawnPlayerEnemy(enemies[playerEnemyCounter]);
+    playerEnemyCounter++;
+
+    return true;
+  }
+
+  public bool SpawnNextAIEnemy()
+  {
+    if (aiEnemyCounter >= enemies.Length) return false;
+
+    SpawnAIEnemy(enemies[aiEnemyCounter]);
+    aiEnemyCounter++;
 
     return true;
   }
