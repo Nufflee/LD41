@@ -100,7 +100,7 @@ public class AIGun : MonoBehaviour
 
           Destroy(sparkGameObject, 1.5f);
 
-          float damage = Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 14.0f), 0.0f, 22.0f);
+          float damage = Mathf.Clamp(23.0f / (Vector3.Distance(transform.position, hit.point) / 10.0f), 0.0f, 28.0f);
           hit.collider.transform.parent.GetComponent<Enemy>().Damage(damage);
 
           Statistics.instance.ai.damageDealt += (int) damage;

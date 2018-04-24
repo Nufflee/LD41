@@ -2,16 +2,14 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using NUnit.Framework.Constraints;
 using UnityEngine.AI;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class AIController : MonoBehaviour
 {
   public NavMeshAgent agent { get; private set; }
   private Transform target;
-  [SerializeField] public float health = 100f;
+  [SerializeField] public float health = 200f;
   [SerializeField] private float healthRegen = 0.003f;
   private bool preparingForWave;
   private DateTime spawnTime;
@@ -199,11 +197,11 @@ public class AIController : MonoBehaviour
 
     if (deathTime.Minutes == 0)
     {
-      Statistics.instance.player.timeAlive = deathTime.Seconds + " sec";
+      Statistics.instance.ai.timeAlive = deathTime.Seconds + " sec";
     }
     else
     {
-      Statistics.instance.player.timeAlive = deathTime.Minutes + " min " + deathTime.Seconds + " sec";
+      Statistics.instance.ai.timeAlive = deathTime.Minutes + " min " + deathTime.Seconds + " sec";
     }
 
     Statistics.instance.ai.score = Score.instance.aiScore;

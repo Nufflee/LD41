@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using DigitalRuby.Tween;
+﻿using DigitalRuby.Tween;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Statistics : MonoBehaviour
@@ -9,11 +9,13 @@ public class Statistics : MonoBehaviour
 
   public Statistic player = new Statistic();
   public Statistic ai = new Statistic();
+  private bool shown;
 
   private void Awake()
   {
     instance = this;
   }
+
 
   public void Show()
   {
@@ -37,7 +39,25 @@ public class Statistics : MonoBehaviour
     aiPanel.gameObject.Tween("", aiStartPosition, new Vector3(-281.24f, -59.767f, 0.125f), 1.0f, TweenScaleFunctions.EaseOutBounce, (t) => { aiPanel.localPosition = t.CurrentValue; });
 
     Vector3 playerStartPosition = playerPanel.localPosition;
-    playerPanel.gameObject.Tween("a", playerStartPosition, new Vector3(-25.2f, -59.763f, 0.125f), 1.0f, TweenScaleFunctions.EaseOutBounce, (t) => { playerPanel.localPosition = t.CurrentValue; });
+    playerPanel.gameObject.Tween("a", playerStartPosition, new Vector3(-25.2f, -59.763f, 0.125f), 1.0f, TweenScaleFunctions.EaseOutBounce, (ITween<Vector3> t) => { playerPanel.localPosition = t.CurrentValue; }, (ITween<Vector3> t) => { shown = true; });
+  }
+
+  private void Update()
+  {
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+      MainMenuButton();
+    }
+  }
+
+  public void MainMenuButton()
+  {
+    SceneManager.LoadScene(0);
+  }
+
+  public void ViewLeaderboard()
+  {
+    Application.OpenURL("http://nufflee.com/droneout");
   }
 }
 
